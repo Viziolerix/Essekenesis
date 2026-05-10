@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Essekenesis — Schools of Power</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080808;
+    --bg2: #0d0d0d;
+    --bg3: #111111;
+    --border: #2a2a2a;
+    --glow-gold: #c9a84c;
+    --glow-crimson: #8b1a1a;
+    --glow-void: #2d1a4a;
+    --glow-ice: #1a3a5c;
+    --glow-nature: #1a3a1a;
+    --text-primary: #e8e0d0;
+    --text-dim: #7a7060;
+    --text-accent: #c9a84c;
+
+    --cat-pillar: #c9a84c;
+    --cat-elemental: #c0452a;
+    --cat-cosmic: #5a3a9a;
+    --cat-mind: #7a3a7a;
+    --cat-force: #3a6a9a;
+    --cat-bio: #2a7a3a;
+    --cat-alchemic: #8a6a2a;
+    --cat-occult: #6a2a6a;
+    --cat-balance: #4a8a8a;
+    --cat-forbidden: #1a1a1a;
+    --cat-forbidden-text: #8b0000;
+    --cat-anomaly: #000000;
+    --cat-anomaly-text: #3a0a3a;
+    --cat-anomaly-glow: #6a0a6a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'IM Fell English', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  header {
+    text-align: center;
+    padding: 60px 20px 40px;
+    position: relative;
+    border-bottom: 1px solid #2a2a2a;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--glow-gold), transparent);
+  }
+
+  h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.6rem, 4vw, 3rem);
+    letter-spacing: 0.12em;
+    color: var(--glow-gold);
+    text-shadow: 0 0 40px rgba(201,168,76,0.3), 0 0 80px rgba(201,168,76,0.1);
+    margin-bottom: 10px;
+  }
+
+  .subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* Filters */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 30px 40px 20px;
+    position: sticky;
+    top: 57px;
+    z-index: 100;
+    background: rgba(8,8,8,0.96);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    align-items: center;
+  }
+
+  .controls-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-right: 5px;
+  }
+
+  .filter-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover { border-color: var(--glow-gold); color: var(--glow-gold); }
+  .filter-btn.active { border-color: currentColor; color: var(--glow-gold); background: rgba(201,168,76,0.08); }
+
+  .filter-btn[data-cat="pillar"].active { color: var(--cat-pillar); background: rgba(201,168,76,0.08); border-color: var(--cat-pillar); }
+  .filter-btn[data-cat="elemental"].active { color: var(--cat-elemental); background: rgba(192,69,42,0.08); border-color: var(--cat-elemental); }
+  .filter-btn[data-cat="cosmic"].active { color: var(--cat-cosmic); background: rgba(90,58,154,0.08); border-color: var(--cat-cosmic); }
+  .filter-btn[data-cat="mind"].active { color: var(--cat-mind); background: rgba(122,58,122,0.08); border-color: var(--cat-mind); }
+  .filter-btn[data-cat="force"].active { color: var(--cat-force); background: rgba(58,106,154,0.08); border-color: var(--cat-force); }
+  .filter-btn[data-cat="bio"].active { color: var(--cat-bio); background: rgba(42,122,58,0.08); border-color: var(--cat-bio); }
+  .filter-btn[data-cat="alchemic"].active { color: var(--cat-alchemic); background: rgba(138,106,42,0.08); border-color: var(--cat-alchemic); }
+  .filter-btn[data-cat="occult"].active { color: var(--cat-occult); background: rgba(106,42,106,0.08); border-color: var(--cat-occult); }
+  .filter-btn[data-cat="balance"].active { color: var(--cat-balance); background: rgba(74,138,138,0.08); border-color: var(--cat-balance); }
+  .filter-btn[data-cat="forbidden"].active { color: var(--cat-forbidden-text); background: rgba(139,0,0,0.08); border-color: var(--cat-forbidden-text); }
+
+  /* Search */
+  .search-wrap { margin-left: auto; }
+  .search-input {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-family: 'IM Fell English', serif;
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    outline: none;
+    width: 200px;
+    transition: border-color 0.2s;
+  }
+  .search-input::placeholder { color: var(--text-dim); font-style: italic; }
+  .search-input:focus { border-color: var(--glow-gold); }
+
+  /* Main content */
+  main {
+    padding: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Category sections */
+  .category-section {
+    margin-bottom: 60px;
+    transition: opacity 0.3s;
+  }
+
+  .category-section.hidden { display: none; }
+
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cat-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+  }
+
+  .cat-count {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    margin-left: auto;
+  }
+
+  .cat-line { flex: 1; height: 1px; }
+
+  /* Cards grid */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  /* School card */
+  .school-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .school-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .school-card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-2px); }
+  .school-card:hover::before { opacity: 1; }
+
+  .school-card.expanded { border-color: rgba(201,168,76,0.4); }
+  .school-card.expanded::before { opacity: 1; }
+
+  /* Category-specific accent colors */
+  .school-card[data-cat="pillar"]::before { background: var(--cat-pillar); }
+  .school-card[data-cat="elemental"]::before { background: var(--cat-elemental); }
+  .school-card[data-cat="cosmic"]::before { background: var(--cat-cosmic); }
+  .school-card[data-cat="mind"]::before { background: var(--cat-mind); }
+  .school-card[data-cat="force"]::before { background: var(--cat-force); }
+  .school-card[data-cat="bio"]::before { background: var(--cat-bio); }
+  .school-card[data-cat="alchemic"]::before { background: var(--cat-alchemic); }
+  .school-card[data-cat="occult"]::before { background: var(--cat-occult); }
+  .school-card[data-cat="balance"]::before { background: var(--cat-balance); }
+  .school-card[data-cat="forbidden"]::before { background: var(--cat-forbidden-text); }
+
+  .card-header {
+    padding: 18px 20px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .card-sigil {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .card-names { flex: 1; }
+
+  .card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+
+  .card-latin {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  .card-toggle {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    transition: transform 0.3s, color 0.2s;
+    margin-top: 2px;
+    font-style: normal;
+  }
+
+  .school-card.expanded .card-toggle { transform: rotate(180deg); color: var(--glow-gold); }
+
+  /* Summary (always visible) */
+  .card-summary {
+    padding: 0 20px 16px;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: #a09880;
+    font-style: italic;
+  }
+
+  /* Expanded content */
+  .card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .school-card.expanded .card-body { max-height: 400px; }
+
+  .card-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 20px;
+  }
+
+  .card-detail {
+    padding: 16px 20px 20px;
+  }
+
+  .card-detail p {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: #b0a890;
+    margin-bottom: 14px;
+  }
+
+  .overuse-block {
+    background: var(--bg);
+    border-left: 2px solid var(--cat-forbidden-text);
+    padding: 10px 14px;
+    margin-top: 4px;
+  }
+
+  .overuse-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #8b0000;
+    margin-bottom: 5px;
+  }
+
+  .overuse-text {
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #907060;
+    font-style: italic;
+  }
+
+  /* Forbidden special styling */
+  .school-card[data-cat="forbidden"] {
+    background: #0a0505;
+    border-color: #2a0a0a;
+  }
+
+  .school-card[data-cat="forbidden"] .card-name { color: #cc3333; }
+  .school-card[data-cat="forbidden"] .card-summary { color: #7a5040; }
+
+  /* ANOMALY — Primorivorae */
+  .school-card[data-cat="anomaly"] {
+    background: #030003;
+    border-color: #2a0a2a;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .school-card[data-cat="anomaly"]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(60,0,60,0.04) 8px,
+      rgba(60,0,60,0.04) 9px
+    );
+    pointer-events: none;
+  }
+
+  .school-card[data-cat="anomaly"]::before { background: var(--cat-anomaly-glow); }
+
+  .school-card[data-cat="anomaly"] .card-name {
+    color: #9a3a9a;
+    letter-spacing: 0.15em;
+  }
+
+  .school-card[data-cat="anomaly"] .card-sigil {
+    border-color: #3a0a3a;
+    color: #6a0a6a;
+    background: #000;
+    font-size: 0.9rem;
+  }
+
+  .school-card[data-cat="anomaly"] .card-summary { color: #5a3a5a; font-style: italic; }
+  .school-card[data-cat="anomaly"] .card-latin { color: #4a1a4a; }
+
+  .school-card[data-cat="anomaly"] .overuse-block {
+    border-left-color: #4a0a4a;
+    background: #000;
+  }
+
+  .school-card[data-cat="anomaly"] .overuse-label { color: #6a1a6a; }
+  .school-card[data-cat="anomaly"] .overuse-text { color: #5a3a5a; }
+
+  .school-card[data-cat="anomaly"] .card-detail p { color: #7a5a7a; }
+
+  .anomaly-warning {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.5rem;
+    letter-spacing: 0.3em;
+    color: #6a0a6a;
+    border: 1px solid #3a0a3a;
+    padding: 2px 8px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    animation: flicker 4s infinite;
+  }
+
+  @keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.3; }
+    97% { opacity: 0.9; }
+    98% { opacity: 0.2; }
+    99% { opacity: 0.8; }
+  }
+
+  .redacted {
+    background: #1a001a;
+    color: #1a001a;
+    border-radius: 2px;
+    padding: 0 4px;
+    user-select: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    display: inline;
+  }
+
+  .redacted::after {
+    content: '█████████';
+    color: #3a0a3a;
+  }
+
+  .archive-id {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: #3a1a3a;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* Section for anomaly */
+  .category-section[data-cat="anomaly"] .cat-title {
+    letter-spacing: 0.5em;
+  }
+
+  .category-section[data-cat="anomaly"] .cat-header {
+    border-bottom-color: #2a0a2a;
+  }
+
+  .forbidden-warning {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    color: #8b0000;
+    border: 1px solid #4a0a0a;
+    padding: 2px 8px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  /* Tab Navigation */
+  .tab-nav {
+    display: flex;
+    border-bottom: 2px solid var(--border);
+    background: rgba(8,8,8,0.98);
+    position: sticky;
+    top: 0;
+    z-index: 300;
+    backdrop-filter: blur(10px);
+    padding: 0 40px;
+    gap: 4px;
+  }
+  .tab-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 18px 28px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    bottom: -2px;
+  }
+  .tab-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+  .tab-btn.active { color: var(--glow-gold); border-bottom-color: var(--glow-gold); }
+  .tab-btn.tab-ordo.active { color: #8aaccc; border-bottom-color: #8aaccc; }
+  .tab-page { display: none; }
+  .tab-page.active { display: block; }
+
+  /* Ordo Page Styles */
+  .ordo-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+  .ordo-intro {
+    text-align: center;
+    margin-bottom: 70px;
+    padding-bottom: 50px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .ordo-intro::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #8aaccc, transparent);
+  }
+  .ordo-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    color: #8aaccc;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: block;
+  }
+  .ordo-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    color: #b8cce0;
+    text-shadow: 0 0 40px rgba(138,172,204,0.2);
+    margin-bottom: 20px;
+    letter-spacing: 0.08em;
+  }
+  .ordo-lead {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #8a8070;
+    max-width: 600px;
+    margin: 0 auto;
+    font-style: italic;
+  }
+
+  /* Rule cards */
+  .rules-list { display: flex; flex-direction: column; gap: 2px; }
+
+  .rule-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    transition: all 0.25s;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .rule-card:hover { border-color: rgba(138,172,204,0.25); border-left-color: #8aaccc; }
+  .rule-card.expanded { border-color: rgba(138,172,204,0.3); border-left-color: #8aaccc; }
+
+  .rule-card[data-stability="stable"] { --rule-color: #4a9a6a; }
+  .rule-card[data-stability="warning"] { --rule-color: #c9a84c; }
+  .rule-card[data-stability="danger"] { --rule-color: #c0452a; }
+  .rule-card[data-stability="forbidden"] { --rule-color: #8b0000; }
+  .rule-card[data-stability="neutral"] { --rule-color: #8aaccc; }
+
+  .rule-card:hover { border-left-color: var(--rule-color); }
+  .rule-card.expanded { border-left-color: var(--rule-color); }
+
+  .rule-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.1rem;
+    color: var(--rule-color);
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    background: rgba(0,0,0,0.2);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .rule-card.expanded .rule-num,
+  .rule-card:hover .rule-num { opacity: 1; }
+
+  .rule-content { padding: 0; }
+
+  .rule-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 20px;
+  }
+
+  .rule-title-wrap { flex: 1; }
+
+  .rule-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--rule-color);
+    margin-bottom: 4px;
+    opacity: 0.8;
+  }
+
+  .rule-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+  }
+
+  .rule-toggle {
+    color: var(--text-dim);
+    font-size: 0.65rem;
+    transition: transform 0.3s, color 0.2s;
+  }
+  .rule-card.expanded .rule-toggle { transform: rotate(180deg); color: var(--rule-color); }
+
+  .rule-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .rule-card.expanded .rule-body { max-height: 300px; }
+
+  .rule-divider { height: 1px; background: var(--border); margin: 0 20px; }
+
+  .rule-detail {
+    padding: 18px 20px 22px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .rule-text {
+    font-size: 0.84rem;
+    line-height: 1.75;
+    color: #a09880;
+  }
+
+  .rule-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid var(--rule-color);
+    color: var(--rule-color);
+    white-space: nowrap;
+    background: rgba(0,0,0,0.4);
+    opacity: 0.7;
+  }
+
+  /* Vector diagram */
+  .vector-section {
+    margin-top: 60px;
+    padding-top: 50px;
+    border-top: 1px solid var(--border);
+  }
+
+  .vector-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: #8aaccc;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .vector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+
+  .vector-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+
+  .vector-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .vector-schools {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* Stability key */
+  .stability-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 50px;
+    padding: 24px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+  }
+
+  .stability-key-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
+  .key-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.78rem;
+    color: #9a9080;
+  }
+
+  .key-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 600px) {
+    .ordo-page { padding: 30px 20px; }
+    .rule-detail { grid-template-columns: 1fr; }
+    .rule-badge { display: none; }
+  }
+
+  .tab-btn.tab-hierarchy.active { color: #a0c0a0; border-bottom-color: #a0c0a0; }
+
+  /* Hierarchy Page */
+  .hier-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+  .hier-intro {
+    text-align: center;
+    margin-bottom: 70px;
+    padding-bottom: 50px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .hier-intro::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 1px;
+    background: linear-gradient(90deg, transparent, #a0c0a0, transparent);
+  }
+  .hier-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    color: #a0c0a0;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: block;
+  }
+  .hier-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    color: #c8d8c8;
+    text-shadow: 0 0 40px rgba(160,192,160,0.15);
+    margin-bottom: 20px;
+    letter-spacing: 0.08em;
+  }
+  .hier-lead {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #8a8070;
+    max-width: 620px;
+    margin: 0 auto;
+    font-style: italic;
+  }
+
+  /* Three columns for the three orders */
+  .hier-orders {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  @media (max-width: 860px) {
+    .hier-orders { grid-template-columns: 1fr; }
+  }
+
+  .order-column {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .order-header {
+    text-align: center;
+    padding: 28px 20px 22px;
+    border: 1px solid var(--border);
+    margin-bottom: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .order-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+  }
+
+  .order-light .order-header { border-color: #3a3020; }
+  .order-light .order-header::before { background: radial-gradient(ellipse at 50% 0%, #c9a84c, transparent 70%); opacity: 0.12; }
+  .order-dark .order-header  { border-color: #2a1010; }
+  .order-dark .order-header::before  { background: radial-gradient(ellipse at 50% 0%, #8b0000, transparent 70%); opacity: 0.12; }
+  .order-neutral .order-header { border-color: #1a2a1a; }
+  .order-neutral .order-header::before { background: radial-gradient(ellipse at 50% 0%, #4a8a4a, transparent 70%); opacity: 0.12; }
+
+  .order-sigil {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .order-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 6px;
+  }
+  .order-light .order-name  { color: #c9a84c; }
+  .order-dark .order-name   { color: #cc4444; }
+  .order-neutral .order-name { color: #6aaa6a; }
+
+  .order-desc {
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  /* Tier cards */
+  .tier-card {
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .tier-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .tier-card:hover::before, .tier-card.expanded::before { opacity: 1; }
+
+  .order-light  .tier-card::before { background: linear-gradient(90deg, transparent, #c9a84c, transparent); }
+  .order-dark   .tier-card::before { background: linear-gradient(90deg, transparent, #cc4444, transparent); }
+  .order-neutral .tier-card::before { background: linear-gradient(90deg, transparent, #6aaa6a, transparent); }
+
+  .tier-card:hover { border-color: rgba(255,255,255,0.1); }
+
+  .tier-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .tier-rank {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+  .order-light  .tier-rank { color: #c9a84c; }
+  .order-dark   .tier-rank { color: #cc4444; }
+  .order-neutral .tier-rank { color: #6aaa6a; }
+
+  .tier-names { flex: 1; }
+
+  .tier-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+
+  .tier-aka {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  .tier-toggle {
+    color: var(--text-dim);
+    font-size: 0.6rem;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .tier-card.expanded .tier-toggle { transform: rotate(180deg); }
+
+  .tier-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .tier-card.expanded .tier-body { max-height: 200px; }
+
+  .tier-divider { height: 1px; background: var(--border); margin: 0 16px; }
+
+  .tier-detail {
+    padding: 14px 16px 18px;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #9a9080;
+  }
+
+  /* Connector lines between tiers */
+  .tier-connector {
+    display: flex;
+    justify-content: center;
+    height: 10px;
+    position: relative;
+  }
+  .tier-connector::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 1px;
+  }
+  .order-light  .tier-connector::before { background: #3a3020; }
+  .order-dark   .tier-connector::before { background: #3a1010; }
+  .order-neutral .tier-connector::before { background: #1a3a1a; }
+
+  /* Stats bar */
+  .stats-bar {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 40px;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .stat-item span { color: var(--text-accent); }
+
+  /* No results */
+  .no-results {
+    text-align: center;
+    padding: 80px 40px;
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 1rem;
+    display: none;
+  }
+
+  .no-results.visible { display: block; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #2a2a2a; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--glow-gold); }
+
+  @media (max-width: 600px) {
+    main { padding: 20px; }
+    .controls { padding: 15px 20px; }
+    .stats-bar { padding: 10px 20px; flex-wrap: wrap; gap: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Essekenesis</h1>
+  <p class="subtitle">The Schools of Soulcraft &amp; Essence Manipulation</p>
+</header>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" data-tab="schools">Schools of Power</button>
+  <button class="tab-btn tab-ordo" data-tab="ordo">Ordo Fusion</button>
+  <button class="tab-btn tab-hierarchy" data-tab="hierarchy">Etherial Hierarchy</button>
+</nav>
+
+<!-- SCHOOLS TAB -->
+<div class="tab-page active" id="tab-schools">
+
+<div class="stats-bar">
+  <div class="stat-item">Total Schools: <span id="total-count">98</span></div>
+  <div class="stat-item">Showing: <span id="visible-count">97</span></div>
+  <div class="stat-item">Active Filter: <span id="active-filter">All</span></div>
+</div>
+
+<div class="controls">
+  <span class="controls-label">Filter</span>
+  <button class="filter-btn active" data-cat="all">All</button>
+  <button class="filter-btn" data-cat="pillar">Core Pillar</button>
+  <button class="filter-btn" data-cat="elemental">Elemental</button>
+  <button class="filter-btn" data-cat="cosmic">Cosmic &amp; Astral</button>
+  <button class="filter-btn" data-cat="mind">Mind &amp; Soul</button>
+  <button class="filter-btn" data-cat="force">Force &amp; Physical</button>
+  <button class="filter-btn" data-cat="bio">Biological</button>
+  <button class="filter-btn" data-cat="alchemic">Alchemic</button>
+  <button class="filter-btn" data-cat="occult">Occult &amp; Fate</button>
+  <button class="filter-btn" data-cat="balance">Balance</button>
+  <button class="filter-btn" data-cat="forbidden">⚠ Forbidden</button>
+  <button class="filter-btn" data-cat="anomaly" style="border-color:#3a0a3a;color:#4a0a4a;">∅ Anomaly</button>
+  <div class="search-wrap">
+    <input class="search-input" type="text" placeholder="Search schools…" id="search-input">
+  </div>
+</div>
+
+<main id="main-content"></main>
+<div class="no-results" id="no-results">No schools match your search.</div>
+
+</div><!-- end tab-schools -->
+
+<!-- ORDO TAB -->
+<div class="tab-page" id="tab-ordo">
+<div class="ordo-page">
+
+  <div class="ordo-intro">
+    <span class="ordo-eyebrow">Doctrine of Fusion</span>
+    <h2 class="ordo-title">The Ordo System</h2>
+    <p class="ordo-lead">An Ordo is a secondary school of Essekenesis applied as a modifier to a primary discipline. The result is not a combination — it is a third, entirely distinct art. Ten laws govern how this process functions, what it permits, and what it destroys.</p>
+  </div>
+
+  <div class="rules-list" id="rules-list"></div>
+
+  <div class="vector-section">
+    <div class="vector-title">Essence Vector Reference</div>
+    <div class="vector-grid" id="vector-grid"></div>
+
+    <div class="stability-key">
+      <div class="stability-key-title">Fusion Stability Classifications</div>
+      <div class="key-item"><div class="key-dot" style="background:#4a9a6a"></div>Stable — compatible vectors, safe to attempt</div>
+      <div class="key-item"><div class="key-dot" style="background:#c9a84c"></div>Unstable — opposing vectors, risk of soul damage</div>
+      <div class="key-item"><div class="key-dot" style="background:#c0452a"></div>Catastrophic — contradicting laws, severe environmental risk</div>
+      <div class="key-item"><div class="key-dot" style="background:#8b0000"></div>Forbidden — dark Ordo on Light caster or vice versa (except Equasonae/Mortai)</div>
+    </div>
+  </div>
+
+</div>
+</div><!-- end tab-ordo -->
+
+<!-- HIERARCHY TAB -->
+<div class="tab-page" id="tab-hierarchy">
+<div class="hier-page">
+
+  <div class="hier-intro">
+    <span class="hier-eyebrow">Classification of Beings</span>
+    <h2 class="hier-title">Etherial Hierarchy</h2>
+    <p class="hier-lead">All beings capable of Essence manipulation exist within one of three Orders — Light, Dark, or Neutral. Each Order carries its own chain of classification, from the primordial lords of creation and destruction down to the unaligned mortals who carry only potential.</p>
+  </div>
+
+  <div class="hier-orders" id="hier-orders"></div>
+
+</div>
+</div><!-- end tab-hierarchy -->
+
+<script>
+const SCHOOLS = [
+  // CORE PILLAR
+  { cat: "pillar", sigil: "☀", name: "Luminae", latin: "Essekenesis Luminae", alignment: "Light",
+    summary: "Light-aligned soulcraft of order, clarity, and restoration.",
+    desc: "Practitioners shape their Essence according to order, clarity, revelation, and restoration. They create radiant barriers, purge corruption from souls, stabilize broken spiritual structures, and amplify positive emotional states such as hope and resolve.",
+    overuse: "Spiritual burnout, emotional numbness, and a dangerous superiority complex where the caster begins to believe their judgment is always correct." },
+  { cat: "pillar", sigil: "🌑", name: "Infernae", latin: "Essekenesis Infernae", alignment: "Dark",
+    summary: "Dark-aligned soulcraft of pain, fear, and entropic decay.",
+    desc: "Practitioners use Essence through the lenses of pain, fear, rage, and decay. They excel at curses, torment loops, spiritual corrosion, and accelerating entropy in living or nonliving targets.",
+    overuse: "Steadily erodes empathy and personal identity, slowly tuning the soul toward something closer to a demon or darkspawn." },
+
+  // ELEMENTAL
+  { cat: "elemental", sigil: "🔥", name: "Pyrae", latin: "Essekenesis Pyrae", alignment: "Neutral",
+    summary: "Essence shaped into flame; emotions fuel the fire's nature.",
+    desc: "Users can conjure fire, wrap weapons in soulfire, or let their emotions directly influence the temperature and aggression of the flames. Advanced users can burn abstract things such as a specific memory or emotional attachment.",
+    overuse: "Overheats the body and Essence, leading to unstable moods and impulsive actions." },
+  { cat: "elemental", sigil: "🌊", name: "Hydrae", latin: "Essekenesis Hydrae", alignment: "Neutral",
+    summary: "Essence given the qualities of water and flow.",
+    desc: "Users control liquid, including blood, mist, and bodies of water. They can drown from afar, form protective spheres, or carve with condensed water blades. High level practitioners also sense emotional currents in groups.",
+    overuse: "Makes the caster emotionally detached and indecisive, as if their identity is always drifting." },
+  { cat: "elemental", sigil: "❄", name: "Cryae", latin: "Essekenesis Cryae", alignment: "Neutral",
+    summary: "Essence pulls heat to form ice and frost.",
+    desc: "Users can immobilize enemies, create glasslike ice blades, or preserve bodies and objects. They can also freeze moments inside the mind by numbing specific feelings.",
+    overuse: "Gradual deadening of the caster's emotional range, ultimately creating a cold, detached personality." },
+  { cat: "elemental", sigil: "💨", name: "Aerae", latin: "Essekenesis Aerae", alignment: "Neutral",
+    summary: "Essence as air currents, pressure shifts, and whispered winds.",
+    desc: "Users generate cutting gusts, tunnels of wind, suffocating vacuums, or gentle drafts that carry whispers. Skilled practitioners alter the trajectory of projectiles through subtle pressure changes.",
+    overuse: "Constant dizziness and a psychological sense of never feeling grounded or stable." },
+  { cat: "elemental", sigil: "⛰", name: "Terrae", latin: "Essekenesis Terrae", alignment: "Neutral",
+    summary: "Essence anchored into stone, soil, and mineral.",
+    desc: "Users can raise walls, cause localized quakes, harden their bodies, or read lingering Essence impressions inside the earth. History, trauma, and battle echoes can be sensed in old ground.",
+    overuse: "Makes the caster slow to adapt, extremely stubborn, and physically heavy in both body and spirit." },
+  { cat: "elemental", sigil: "⚡", name: "Voltae", latin: "Essekenesis Voltae", alignment: "Neutral",
+    summary: "Essence polarized into electrical force.",
+    desc: "Users enhance their reaction speed, send arcs of lightning, jam nervous systems, or overload machines. At higher levels they overclock their brains briefly to perceive events in apparent slow motion.",
+    overuse: "Damages nerves, destabilizes the heart, and floods the mind with racing intrusive thoughts." },
+  { cat: "elemental", sigil: "⚙", name: "Ferrae", latin: "Essekenesis Ferrae", alignment: "Neutral",
+    summary: "Essence bonded with metal — reshape, magnetize, weaponize.",
+    desc: "Users reshape, bend, sharpen, or magnetize metallic objects. They can disarm enemies at range or make an entire battlefield a shifting field of blades. Advanced practitioners imprint memory into their favorite weapon.",
+    overuse: "Stiffness in the body and a purely utilitarian view of people and tools alike." },
+  { cat: "elemental", sigil: "🌋", name: "Magmae", latin: "Essekenesis Magmae", alignment: "Neutral",
+    summary: "Fire and earth fused — Essence flowing as molten rock.",
+    desc: "Users melt fortifications, create rivers of lethal magma, or encase themselves in a moving volcanic shell.",
+    overuse: "Internal overheating and a sluggish emotional state as if slowly turning into a slow-moving mountain of anger." },
+  { cat: "elemental", sigil: "🌫", name: "Fumae", latin: "Essekenesis Fumae", alignment: "Neutral",
+    summary: "Essence as smoke and haze; illusions woven in fog.",
+    desc: "Users create choking clouds, obscure sight, or weave illusions inside drifting fog. Smoke infused with fear or confusion can break enemy lines without a single blade drawn.",
+    overuse: "Scars the lungs and blurs the edges of the caster's own sense of self." },
+  { cat: "elemental", sigil: "💎", name: "Crystae", latin: "Essekenesis Crystae", alignment: "Neutral",
+    summary: "Essence solidified into crystalline structures and storage batteries.",
+    desc: "Users form blades, armor, cages, and importantly Essence storage crystals that act as external batteries.",
+    overuse: "Pushes the caster's soul patterns toward rigidity and brittleness — powerful but inflexible." },
+  { cat: "elemental", sigil: "🏜", name: "Sidae", latin: "Essekenesis Sidae", alignment: "Neutral",
+    summary: "Essence acting through sand and granular materials.",
+    desc: "Users grind armor away, blind opponents, and shift terrain underfoot. Sandstorms often carry subtle Essence effects such as disorientation.",
+    overuse: "Leaves the caster feeling emotionally hollow, as if everything slips away like grains through fingers." },
+  { cat: "elemental", sigil: "🌿", name: "Sylvae", latin: "Essekenesis Sylvae", alignment: "Neutral",
+    summary: "Essence amplifying plant life and woodland growth.",
+    desc: "Users accelerate growth, command roots and vines, or compress wood into unnatural hardness. Pollen or sap can carry emotional or toxic effects.",
+    overuse: "Blurs the line between caster and ecosystem; they may begin thinking with the priorities of a forest." },
+  { cat: "elemental", sigil: "⛈", name: "Tempestae", latin: "Essekenesis Tempestae", alignment: "Neutral",
+    summary: "Essence distributed across weather systems — storms at will.",
+    desc: "Users call storms, direct lightning and rain, and manipulate pressure fronts. They can shift a calm sky into chaos over an entire region.",
+    overuse: "Destabilizes mood so the caster swings like the weather they command." },
+  { cat: "elemental", sigil: "☠", name: "Toxae", latin: "Essekenesis Toxae", alignment: "Neutral",
+    summary: "Essence bound to poisons and venoms.",
+    desc: "Users strengthen, alter, or neutralize toxins and venoms. They can create custom poisons tuned to certain species or emotional states.",
+    overuse: "Corrupts the caster's body chemistry and makes healing them extremely complicated or dangerous." },
+  { cat: "elemental", sigil: "🧪", name: "Caustae", latin: "Essekenesis Caustae", alignment: "Neutral",
+    summary: "Essence shaping highly corrosive fluids and acids.",
+    desc: "Casters design acids that target specific materials or weave spray patterns that devour armor and stone.",
+    overuse: "Pushes the caster toward a mindset that wishes to dissolve any obstacle, including moral ones." },
+  { cat: "elemental", sigil: "🌊", name: "Ignarae", latin: "Essekenesis Ignarae", alignment: "Neutral",
+    summary: "Flowing lava in mobile form — whips, rivers, jets of rock.",
+    desc: "Users create whips, rivers, and jets of searing liquid rock specifically for combat shaping.",
+    overuse: "Severely damages internal organs and may leave permanent heat-based injuries." },
+  { cat: "elemental", sigil: "♨", name: "Vaporae", latin: "Essekenesis Vaporae", alignment: "Neutral",
+    summary: "Essence as steam and vapor — ambush and battlefield control.",
+    desc: "Users fight through scalding fog, pressure bursts, and invisible heat veils.",
+    overuse: "Dehydrates the caster and overloads their senses, especially touch and temperature." },
+  { cat: "elemental", sigil: "❄", name: "Nivae", latin: "Essekenesis Nivae", alignment: "Neutral",
+    summary: "Gentle snow and subtle cold — silence and emotional numbness.",
+    desc: "Users blanket areas in silence, hide footprints, and slow entire engagements by numbing limbs and minds. In advanced forms they can dull emotional pain over a large group.",
+    overuse: "Chronic fatigue and emotional apathy." },
+
+  // COSMIC
+  { cat: "cosmic", sigil: "⚖", name: "Gravitae", latin: "Essekenesis Gravitae", alignment: "Neutral",
+    summary: "Essence bending gravitational fields.",
+    desc: "Users can make things heavier or lighter, pin enemies down, or create zones of near weightlessness. The most advanced can compress small regions to extreme density.",
+    overuse: "Makes the caster feel spiritually crushed and emotionally burdened." },
+  { cat: "cosmic", sigil: "🔀", name: "Spatiale", latin: "Essekenesis Spatiale", alignment: "Neutral",
+    summary: "Essence manipulating distance and spatial relationships.",
+    desc: "Users shorten or lengthen paths, create folded rooms, or open small pockets outside normal space. Misuse risks accidental micro rift events.",
+    overuse: "Leaves the caster disoriented and unable to trust their own sense of position." },
+  { cat: "cosmic", sigil: "⏳", name: "Temporae", latin: "Essekenesis Temporae", alignment: "Neutral",
+    summary: "Essence influencing local experience of time.",
+    desc: "Users slightly speed up their own perception or slow a small area around them. Stronger actions strain causality and quickly approach forbidden territory.",
+    overuse: "Fractures the caster's memory and sense of timeline." },
+  { cat: "cosmic", sigil: "○", name: "Vorae", latin: "Essekenesis Vorae", alignment: "Neutral",
+    summary: "Essence as absence — nullification and negation.",
+    desc: "Users create zones that cancel sound, weaken energy, or swallow weaker spells. A defensive and disruptive school.",
+    overuse: "Hollows out the caster emotionally, leaving them numb to both joy and sorrow." },
+  { cat: "cosmic", sigil: "✦", name: "Astrae", latin: "Essekenesis Astrae", alignment: "Neutral",
+    summary: "Essence refined into starlike radiance.",
+    desc: "Users fire beams of concentrated astral light, form halos of guidance, or mark targets with luminous brand-style effects seen only by certain beings.",
+    overuse: "Causes insomnia and compresses them under a sense of cosmic responsibility." },
+  { cat: "cosmic", sigil: "☢", name: "Radiae", latin: "Essekenesis Radiae", alignment: "Neutral",
+    summary: "Essence as pure radiation — devastating area control.",
+    desc: "Users sterilize, mutate, or burn through defenses with invisible fields.",
+    overuse: "Risks mutations, severe illness, and wild instability of their own Essence patterns." },
+  { cat: "cosmic", sigil: "●", name: "Singulae", latin: "Essekenesis Singulae", alignment: "Neutral",
+    summary: "Essence forming miniature centers of extreme pull.",
+    desc: "Users create tiny singularity cores that drag matter and energy inward for short periods. Even slight miscalculation can rip pieces out of the environment.",
+    overuse: "Compresses the caster's own Essence to dangerous levels, risking implosive death." },
+  { cat: "cosmic", sigil: "💡", name: "Luxae", latin: "Essekenesis Luxae", alignment: "Light",
+    summary: "Essence embodying light itself — illumination and illusion.",
+    desc: "Users control illumination, refraction, and coherent beams that cut or blind. They can also craft illusions by manipulating what is or is not seen.",
+    overuse: "Severe headaches, vision problems, and a craving to always remain in the spotlight." },
+  { cat: "cosmic", sigil: "🌑", name: "Umbrae", latin: "Essekenesis Umbrae", alignment: "Dark",
+    summary: "Essence as darkness — shadows, dread, and hidden paths.",
+    desc: "Users bend shadows, suppress sound, and instill dread through unseen presence. High level Umbrae allows travel along shadowed paths and fear imprinting in subconscious layers.",
+    overuse: "Pulls the caster spiritually toward Dark Etherium and makes them alien to ordinary mortals." },
+
+  // MIND/SOUL
+  { cat: "mind", sigil: "🧠", name: "Mnemonae", latin: "Essekenesis Mnemonae", alignment: "Neutral",
+    summary: "Essence interacting with memory — read, edit, or erase.",
+    desc: "Users can read, edit, suppress, or copy memories. At subtle levels they can repair trauma or share an experience across several people.",
+    overuse: "Undermines the caster's own continuity of self as they increasingly forget what is truly theirs." },
+  { cat: "mind", sigil: "❤", name: "Emotae", latin: "Essekenesis Emotae", alignment: "Neutral",
+    summary: "Essence rewriting emotional states — terrifying in politics.",
+    desc: "Users can calm crowds, inflame hatred, induce loyalty, or plunge someone into despair.",
+    overuse: "Leaves the caster unsure which emotions inside them are authentic." },
+  { cat: "mind", sigil: "💤", name: "Somniae", latin: "Essekenesis Somniae", alignment: "Neutral",
+    summary: "Essence traveling through dreams — healer or torturer.",
+    desc: "Practitioners invade, alter, or construct shared dreamscapes to relay messages, train, heal, or torture.",
+    overuse: "Makes waking life feel insubstantial and can trap the caster in dreamlike loops." },
+  { cat: "mind", sigil: "😱", name: "Phobae", latin: "Essekenesis Phobae", alignment: "Neutral",
+    summary: "Essence targeting fear — amplify or extract terror entirely.",
+    desc: "Users bring buried phobias to the surface, amplify terror, or extract fear entirely so a person feels nothing in the face of danger.",
+    overuse: "Heightened paranoia and intrusive imaginations of threat even in safety." },
+  { cat: "mind", sigil: "✊", name: "Volitae", latin: "Essekenesis Volitae", alignment: "Neutral",
+    summary: "Essence shaping willpower — fortify or shatter in an instant.",
+    desc: "Users fortify resolve or shatter it in an instant. High level practitioners can resist many other forms of mental influence.",
+    overuse: "Burns away the caster's own motivation, leaving them exhausted and indifferent." },
+  { cat: "mind", sigil: "🌀", name: "Maniaae", latin: "Essekenesis Maniaae", alignment: "Dark",
+    summary: "Essence warping cognition — confusion, obsession, hallucination.",
+    desc: "Users induce confusion, obsession, hallucination, or twisted logic. In its more constructive form it can free minds from rigid thought patterns at extreme risk.",
+    overuse: "Drives the caster toward lasting instability and fragmented identity." },
+  { cat: "mind", sigil: "🐺", name: "Ferinae", latin: "Essekenesis Ferinae", alignment: "Neutral",
+    summary: "Essence tuning primal instinct — predator or prey.",
+    desc: "Users awaken predatory drive, territorial rage, mating impulses, or survival focus. They can also dampen these responses to keep someone calm.",
+    overuse: "Erodes civilized restraint and pulls the caster toward feral behavior." },
+  { cat: "mind", sigil: "👁", name: "Animae", latin: "Essekenesis Animae", alignment: "Neutral",
+    summary: "Essence separated from the body — soul projection.",
+    desc: "Users project their soul outward for scouting, combat, or lightweight possession of objects and weaker minds.",
+    overuse: "Makes it hard to fully return and can leave parts of their Essence scattered or anchored elsewhere." },
+  { cat: "mind", sigil: "💚", name: "Vitae", latin: "Essekenesis Vitae", alignment: "Light",
+    summary: "Essence reinforcing life itself — heal and extend.",
+    desc: "Users heal injuries, amplify stamina, and even restart failing organs. At higher levels they can temporarily extend remaining life in exchange for their own reserves.",
+    overuse: "Shortens the caster's lifespan and may trigger uncontrolled growth and biological instability." },
+  { cat: "mind", sigil: "💀", name: "Mortae", latin: "Essekenesis Mortae", alignment: "Neutral",
+    summary: "Essence aligned with endings — death and soul transition.",
+    desc: "Users deliver clean death, accelerate natural decay, or soothe a soul's transition out of its body. Not necessarily malicious but deeply feared.",
+    overuse: "Marks the caster with an aura of ending that unnerves all living beings near them." },
+
+  // FORCE
+  { cat: "force", sigil: "👊", name: "Dynamae", latin: "Essekenesis Dynamae", alignment: "Neutral",
+    summary: "Essence interacting with kinetic energy — store and amplify blows.",
+    desc: "Users store the impact of a blow, redirect it, or multiply it on release. They can land enormous hits with seemingly small movements.",
+    overuse: "Strains joints and causes recurring internal injuries." },
+  { cat: "force", sigil: "🛡", name: "Pressae", latin: "Essekenesis Pressae", alignment: "Neutral",
+    summary: "Essence controlling pressure and force.",
+    desc: "Users create invisible crushing fields, hold doors closed, or maintain nearly unbreakable shells.",
+    overuse: "Headaches, chest pain, and a sense of constant internal compression." },
+  { cat: "force", sigil: "📢", name: "Sonorae", latin: "Essekenesis Sonorae", alignment: "Neutral",
+    summary: "Essence modulating sound — amplify, silence, or weaponize.",
+    desc: "Users amplify, silence, or redirect noises and may weaponize sonic waves. They can communicate secretly by imprinting Essence into specific tones.",
+    overuse: "Leaves them hypersensitive to sound and prone to tinnitus." },
+  { cat: "force", sigil: "〰", name: "Tremorae", latin: "Essekenesis Tremorae", alignment: "Neutral",
+    summary: "Essence as vibration — shake structures and loosen armor.",
+    desc: "Users shake structures apart, loosen armor, or delicately vibrate poisons through fluid systems.",
+    overuse: "Tremors in the caster's own hands and loss of fine control." },
+  { cat: "force", sigil: "🌡", name: "Thermiaae", latin: "Essekenesis Thermiaae", alignment: "Neutral",
+    summary: "Pure heat energy without manifest fire or ice.",
+    desc: "Users extract, concentrate, or disperse heat rapidly.",
+    overuse: "Burns out the nervous system and causes unpredictable temperature swings inside their own body." },
+  { cat: "force", sigil: "🧊", name: "Chillae", latin: "Essekenesis Chillae", alignment: "Neutral",
+    summary: "Pure cooling without forming ice — slowing and preservation.",
+    desc: "Ideal for slowing reactions, freezing mechanisms, or preserving corpses.",
+    overuse: "Numbs the caster's physical sensations and emotions." },
+  { cat: "force", sigil: "🧲", name: "Magnae", latin: "Essekenesis Magnae", alignment: "Neutral",
+    summary: "Essence manipulating magnetic fields.",
+    desc: "Users redirect metal projectiles, cling to metallic surfaces, or disable certain kinds of technology.",
+    overuse: "Disrupts their own bioelectric rhythms, causing arrhythmias and cognitive glitches." },
+  { cat: "force", sigil: "◇", name: "Rubae", latin: "Essekenesis Rubae", alignment: "Neutral",
+    summary: "Essence changing friction — perfect grip or impossible slick.",
+    desc: "Users make surfaces perfectly slick or impossibly rough, allowing battlefield traps, escapes, or immobilizations.",
+    overuse: "Distorts the caster's own coordination, causing clumsy or stuck movements." },
+  { cat: "force", sigil: "↔", name: "Impulsae", latin: "Essekenesis Impulsae", alignment: "Neutral",
+    summary: "Essence interacting with momentum — cancel or transfer motion.",
+    desc: "Users keep moving objects going or cancel their motion abruptly, sometimes transferring momentum from one thing to another.",
+    overuse: "Vertigo and fainting spells when motion changes around them." },
+
+  // BIOLOGICAL
+  { cat: "bio", sigil: "🩸", name: "Sangae", latin: "Essekenesis Sangae", alignment: "Neutral",
+    summary: "Essence bound to blood — reroute, thicken, or weaponize.",
+    desc: "Users reroute circulation, thicken or thin blood, and in extreme forms manipulate it outside the body.",
+    overuse: "Risks anemia and severe internal stress." },
+  { cat: "bio", sigil: "🦴", name: "Ossea", latin: "Essekenesis Ossea", alignment: "Neutral",
+    summary: "Essence shaping bone — harden, grow, or deform.",
+    desc: "Users can harden their skeleton, grow new bone armor, or deform an enemy's bones.",
+    overuse: "Uncontrolled bone growth and brittle structural integrity." },
+  { cat: "bio", sigil: "💪", name: "Carnae", latin: "Essekenesis Carnae", alignment: "Neutral",
+    summary: "Essence manipulating flesh and muscle — reshape for any purpose.",
+    desc: "Users remodel their bodies for combat, disguise, or infiltration. They can also warp enemy muscle structure to cripple them.",
+    overuse: "Chronic agony and psychological detachment from their own physical form." },
+  { cat: "bio", sigil: "🌱", name: "Regenae", latin: "Essekenesis Regenae", alignment: "Light",
+    summary: "Essence accelerating regeneration — heal and regrow tissue.",
+    desc: "Users heal wounds quickly, regrow tissue, and sometimes restore limbs.",
+    overuse: "Unstable cell division and may result in tumors or uncontrollable growth." },
+  { cat: "bio", sigil: "🐍", name: "Venomae", latin: "Essekenesis Venomae", alignment: "Dark",
+    summary: "Essence creating and modifying toxins from within the body.",
+    desc: "Users produce custom venoms that can act through touch, breath, or blood.",
+    overuse: "Makes their own physiology hazardous and often incompatible with normal medical treatment." },
+  { cat: "bio", sigil: "🦠", name: "Pestiae", latin: "Essekenesis Pestiae", alignment: "Dark",
+    summary: "Essence guiding disease and microbial life.",
+    desc: "Users can spread plagues, localize them, or redirect them into non-lethal forms.",
+    overuse: "Scrambles the immune system, leaving them oscillating between extreme resistance and self-destructive autoimmunity." },
+  { cat: "bio", sigil: "🌳", name: "Florae", latin: "Essekenesis Florae", alignment: "Neutral",
+    summary: "Essence focused on plant systems — growth, vines, spores.",
+    desc: "Users cause explosive growth, shape trees into structures, or weaponize thorns and spores.",
+    overuse: "Connects consciousness to plant networks to a disturbing degree and weakens human attachment." },
+  { cat: "bio", sigil: "🐾", name: "Bestiae", latin: "Essekenesis Bestiae", alignment: "Neutral",
+    summary: "Essence reaching for animal spirits — borrow senses and forms.",
+    desc: "Users borrow senses, instincts, and even partial forms from beasts.",
+    overuse: "Blurs the line between person and animal, resulting in lasting physical or mental changes." },
+  { cat: "bio", sigil: "🔬", name: "Mutatae", latin: "Essekenesis Mutatae", alignment: "Neutral",
+    summary: "Essence rewriting living forms — dangerous, often irreversible.",
+    desc: "Users alter traits permanently, creating new strengths or deformities. One of the most dangerous non-forbidden schools.",
+    overuse: "Subjects the caster to spontaneous mutations and unstable identity." },
+
+  // ALCHEMIC
+  { cat: "alchemic", sigil: "⚗", name: "Mutareae", latin: "Essekenesis Mutareae", alignment: "Neutral",
+    summary: "Essence fueling transmutation of material.",
+    desc: "Users shift one substance into another by rewriting its pattern. Widely used in crafting and rarely used directly in combat.",
+    overuse: "Makes the caster question their own nature and can destabilize their sense of what is or is not fixed." },
+  { cat: "alchemic", sigil: "👯", name: "Geminae", latin: "Essekenesis Geminae", alignment: "Neutral",
+    summary: "Essence duplicating objects or organisms — never perfect.",
+    desc: "Users duplicate objects or simple organisms by copying their pattern into nearby matter. Copies lack subtle qualities.",
+    overuse: "Fragments the caster's soul into competing internal reflections." },
+  { cat: "alchemic", sigil: "💥", name: "Ruptae", latin: "Essekenesis Ruptae", alignment: "Dark",
+    summary: "Essence deconstructing things into simpler components.",
+    desc: "Users destroy tools, armor, or structures by unwinding their pattern.",
+    overuse: "Encourages a destructive mindset that sees everything through the lens of taking it apart." },
+  { cat: "alchemic", sigil: "🏗", name: "Creatae", latin: "Essekenesis Creatae", alignment: "Light",
+    summary: "Essence shaped into fully formed constructs — weapons to shelters.",
+    desc: "These constructs can remain stable if anchored to something or someone.",
+    overuse: "Drains the caster's reserves completely and may drop them into Essence debt that is painful to repay." },
+  { cat: "alchemic", sigil: "⏬", name: "Entropae", latin: "Essekenesis Entropae", alignment: "Dark",
+    summary: "Essence accelerating decay and breakdown of all things.",
+    desc: "Users corrode metal, rot wood, and degrade spells that rely on stable patterns.",
+    overuse: "Corrodes relationships and personal stability as if the caster spreads metaphorical decay." },
+  { cat: "alchemic", sigil: "📐", name: "Ordinae", latin: "Essekenesis Ordinae", alignment: "Light",
+    summary: "Essence imposing structure and pattern onto chaos.",
+    desc: "Users stabilize wild magic, reinforce barriers, and enforce predictable sequences in chaotic systems.",
+    overuse: "Makes the caster obsessed with control, unable to tolerate randomness or organic change." },
+
+  // OCCULT
+  { cat: "occult", sigil: "👁", name: "Miragae", latin: "Essekenesis Miragae", alignment: "Neutral",
+    summary: "Essence applied to perception — illusions written into senses.",
+    desc: "Users craft illusions by writing false signals directly into senses, rather than only bending light or sound.",
+    overuse: "Leads the caster to mistrust their own perception and sometimes to hallucinations." },
+  { cat: "occult", sigil: "🔴", name: "Maledae", latin: "Essekenesis Maledae", alignment: "Dark",
+    summary: "Essence bound into long-term curses — twisted luck and fate.",
+    desc: "Users place curses that twist luck, health, mind, or social fate over time.",
+    overuse: "Stains the caster's spiritual presence and invites backlash from cosmic forces or curse-breaking specialists." },
+  { cat: "occult", sigil: "🌟", name: "Benedae", latin: "Essekenesis Benedae", alignment: "Light",
+    summary: "Essence anchored as long-term blessings.",
+    desc: "Users attach protection, fortune, strength, or guidance to targets.",
+    overuse: "Creates entanglements where the caster and the blessed share consequences and burdens." },
+  { cat: "occult", sigil: "🔗", name: "Vinculae", latin: "Essekenesis Vinculae", alignment: "Neutral",
+    summary: "Essence creating binding links — oaths, places, souls.",
+    desc: "Users tie souls to oaths, places, objects, or other individuals.",
+    overuse: "Traps the caster inside their own network of bindings and can restrict their freedom in surprising ways." },
+  { cat: "occult", sigil: "👑", name: "Dominae", latin: "Essekenesis Dominae", alignment: "Dark",
+    summary: "Essence overriding external control — seize bodies or environments.",
+    desc: "Users seize bodies or environments by imposing their will directly through Essence.",
+    overuse: "Dissolves respect for autonomy and may weaken their own internal boundaries, enabling counter-possession." },
+  { cat: "occult", sigil: "⭕", name: "Ritusae", latin: "Essekenesis Ritusae", alignment: "Neutral",
+    summary: "Essence structured through ceremony — rituals that scale power.",
+    desc: "Users design rituals with circles, catalysts, and participants to scale their power.",
+    overuse: "Creates reliance on preparation and ritual tools, weakening spontaneous casting ability." },
+  { cat: "occult", sigil: "🎲", name: "Fataae", latin: "Essekenesis Fataae", alignment: "Neutral",
+    summary: "Essence touching the soft outer layers of fate.",
+    desc: "Users nudge probability pathways gently, making some outcomes more likely without breaking causality outright.",
+    overuse: "Entangles the caster in self-reinforcing loops where efforts to control destiny rebound unexpectedly." },
+  { cat: "occult", sigil: "🎰", name: "Chansae", latin: "Essekenesis Chansae", alignment: "Neutral",
+    summary: "Essence pulling directly on probability — swing chances wildly.",
+    desc: "Users swing chances wildly toward success or failure, forcing impossible events into reality.",
+    overuse: "Attracts chaotic corrections from the universe, resulting in increasingly extreme and unpredictable events." },
+
+  // BALANCE
+  { cat: "balance", sigil: "⚖", name: "Equae", latin: "Essekenesis Equae", alignment: "Neutral",
+    summary: "Essence actively seeking balance — dampen extremes.",
+    desc: "Users damp extremes, stabilize clashing magics, and align opposing forces toward a neutral center. Central to the work of Mortai.",
+    overuse: "Erases the caster's personal preferences and pushes them toward cold neutrality." },
+  { cat: "balance", sigil: "🔄", name: "Duae", latin: "Essekenesis Duae", alignment: "Neutral",
+    summary: "Essence working through reflection and inversion.",
+    desc: "Users flip aspects of reality or personality — courage with cowardice, fire with cold, strength with weakness.",
+    overuse: "Fractures the caster into opposing internal aspects that argue and fight for control." },
+  { cat: "balance", sigil: "⬆", name: "Exaltae", latin: "Essekenesis Exaltae", alignment: "Light",
+    summary: "Essence straining toward higher states — evolution and ascension.",
+    desc: "Users evolve existing abilities, unlock latent potential, and push themselves or others toward new classifications of power.",
+    overuse: "Risks partial or failed ascension, leaving the caster stuck between forms and realities." },
+  { cat: "balance", sigil: "🔧", name: "Rectae", latin: "Essekenesis Rectae", alignment: "Light",
+    summary: "Essence aiming to correct systemic flaws — repair everything.",
+    desc: "Users repair corrupted magic systems, restore damaged souls, and reclaim blighted land.",
+    overuse: "Burns out empathy and makes the caster hyper-critical, seeing everything as something broken that must be fixed." },
+  { cat: "balance", sigil: "🔀", name: "Fusiae", latin: "Essekenesis Fusiae", alignment: "Neutral",
+    summary: "Essence fusing multiple sources — bloodlines, powers, even beings.",
+    desc: "Used in fusion experiments and hybrid creation, it can combine bloodlines, powers, or even entire beings.",
+    overuse: "Risks permanent merging with other entities or losing one's identity inside a composite being." },
+
+  // FORBIDDEN
+  { cat: "forbidden", sigil: "🩸", name: "Hemorae", latin: "Essekenesis Hemorae", alignment: "Dark",
+    summary: "Blood authority — command imprinted directly into Essence.",
+    desc: "Unlike Sangae, Hemorae imprints direct commands into the Essence carried in blood itself. A practitioner can force obedience, suppress free will, or rewrite reflexes through the blood bond.",
+    overuse: "Rewires the caster's worldview so they see others only as vessels to control." },
+  { cat: "forbidden", sigil: "⬛", name: "Ruinae", latin: "Essekenesis Ruinae", alignment: "Dark",
+    summary: "Soul degradation — hollow out spirit, passion, and creativity.",
+    desc: "The caster creates a draining field that wears down Essence continuously. Targets lose color in spirit, passion, and creativity, eventually becoming hollow shells.",
+    overuse: "Thins the caster's own soul, leaving them permanently weakened even if they stop." },
+  { cat: "forbidden", sigil: "👥", name: "Umbrae Mortae", latin: "Essekenesis Umbrae Mortae", alignment: "Dark",
+    summary: "Death shadow synthesis — soul fragments shaped into Null Echoes.",
+    desc: "Combines the logic of Mortae and Umbrae to create Null Echoes — shadow copies powered by fragments of the caster's own soul.",
+    overuse: "Hollows the caster until the Echoes are more complete versions of them than the original." },
+  { cat: "forbidden", sigil: "◼", name: "Obliviae", latin: "Essekenesis Obliviae", alignment: "Dark",
+    summary: "Memory erasure at the deepest level — deleted from all record.",
+    desc: "Instead of merely suppressing or editing, Obliviae deletes memory traces from both mind and metaphysical record. Events remain in history but become unreachable by normal means.",
+    overuse: "The caster gradually loses pieces of their own life and cannot even remember what they have lost." },
+  { cat: "forbidden", sigil: "🕷", name: "Xarcae", latin: "Essekenesis Xarcae", alignment: "Dark",
+    summary: "Essence parasitism — feed on another's life force continuously.",
+    desc: "The caster grafts their Essence onto another being and feeds from them continuously. The host becomes pale, tired, and hollow while the user grows stronger.",
+    overuse: "Binds them so deeply that host death tears pieces out of the caster; they may require multiple hosts to remain stable." },
+  { cat: "forbidden", sigil: "⌛", name: "Vitisae", latin: "Essekenesis Vitisae", alignment: "Dark",
+    summary: "Lifespan theft — steal years directly from others.",
+    desc: "The caster grabs strands of remaining time from others and attaches them to their own thread. Victims age rapidly, fall ill, or die years too early.",
+    overuse: "Warps destiny around the caster so that people close to them die young as reality corrects the imbalance." },
+  { cat: "forbidden", sigil: "💢", name: "Cataclysae", latin: "Essekenesis Cataclysae", alignment: "Dark",
+    summary: "Reality fracturing — micro rifts and plane quakes.",
+    desc: "The caster seeks fault lines between planes and forces raw Essence into them until something fails. Results in micro rifts, plane quakes, and regions where physical and Etherial laws fall out of sync.",
+    overuse: "Can collapse entire territories into broken spaces full of uncontrolled rifts." },
+  { cat: "forbidden", sigil: "✖", name: "Nihilae", latin: "Essekenesis Nihilae", alignment: "Dark",
+    summary: "Soul nullification — complete removal from spiritual continuity.",
+    desc: "This school attacks the existence of the soul itself. When successful, the target leaves no ghost, no afterlife presence, and no trace in any known cycle.",
+    overuse: "Using it once marks the caster with a unique spiritual scar recognizable by higher beings anywhere." },
+  { cat: "forbidden", sigil: "∞", name: "Primordiae", latin: "Essekenesis Primordiae", alignment: "Dark",
+    summary: "Pre-creation manipulation — raw Essence before light and dark.",
+    desc: "The caster reaches for raw Essence that predates the division between light and dark. Used to unmake rules, erase distinctions, and revert things to formless states.",
+    overuse: "Dissolves the caster's identity until they stop being a person and become a loose event of formless power." },
+  { cat: "forbidden", sigil: "🌀", name: "Divorae", latin: "Essekenesis Divorae", alignment: "Dark",
+    summary: "Total Essence consumption — devour souls, memories, and abilities.",
+    desc: "The caster devours entire souls, folding them into their own Essence. Over time the absorbed personalities press against the inside of the caster's mind, creating a chaotic inner chorus.",
+    overuse: "Turns them into a walking singularity of stolen lives — hunted by Light Etherium, Dark Etherium, and Equasonae alike." },
+
+  // ANOMALY — BEYOND CLASSIFICATION
+  { cat: "anomaly", sigil: "∅", name: "Primorivorae", latin: "Essekenesis Primorivorae",
+    alignment: "None",
+    archiveId: "ARCHIVE ENTRY 000Δ",
+    clearance: "REDACTED",
+    summary: "Not a school. Not a technique. A dormant reflex from before Essence had laws.",
+    desc: `Primorivorae cannot be traced to any Etherial order. Scholarly consensus indicates it predates the formation of Etherial division entirely, originating from what theoretical cosmology designates the ProtoExistence Era — a period when Essence obeyed no structure or polarity. One current behaved anomalously: it retained shape, reassembled itself after diffusion, and fed on other currents as if consumption were an inherent property. This phenomenon, designated the <em>First Devouring Pattern</em>, demonstrated recursive self-strengthening behavior unlike anything observed since. The forming cosmos intervened directly, rewriting emerging structures of reality to entomb the anomaly. One surviving account states that the structure of Essence was forced into law only to bury something that would not die. Fragments of the Devouring Pattern remain embedded in the foundational layers of Essence. In every verified case of activation, the practitioner ceased to exist in any stable sense. Local flows of time and causality warped unpredictably. Historical documentation pertaining to events near the manifestation site vanished or reappeared in altered forms. Regions touched by Primorivorae exhibit long-term Essence starvation — the anomaly does not simply destroy. It consumes. Indirect witnesses report a phrase whose content has been removed from all archives under mandate <span class='redacted'></span>. The Ultima classification remains sealed. The only unredacted line states simply: <em>"This is not correctable."</em>`,
+    overuse: `There is no overuse. There is no caster. There is no recovery. A sufficiently complete reconstruction of the original pattern is considered incompatible with the continued existence of the universe as presently structured. Continued research risks reassembly. <span class='redacted'></span>` },
+];
+
+const CATEGORIES = [
+  { id: "pillar",    label: "Core Pillar",       color: "var(--cat-pillar)" },
+  { id: "elemental", label: "Elemental",          color: "var(--cat-elemental)" },
+  { id: "cosmic",    label: "Cosmic & Astral",    color: "var(--cat-cosmic)" },
+  { id: "mind",      label: "Mind, Soul & Psyche",color: "var(--cat-mind)" },
+  { id: "force",     label: "Force & Physical Reality", color: "var(--cat-force)" },
+  { id: "bio",       label: "Biological & Organic", color: "var(--cat-bio)" },
+  { id: "alchemic",  label: "Alchemic & Structural", color: "var(--cat-alchemic)" },
+  { id: "occult",    label: "Occult, Fate & Trickery", color: "var(--cat-occult)" },
+  { id: "balance",   label: "Balance & Equilibrium", color: "var(--cat-balance)" },
+  { id: "forbidden", label: "Forbidden Schools",   color: "var(--cat-forbidden-text)" },
+  { id: "anomaly",   label: "Beyond Classification", color: "var(--cat-anomaly-glow)" },
+];
+
+let activeFilter = "all";
+let searchTerm = "";
+
+function buildUI() {
+  const main = document.getElementById("main-content");
+  main.innerHTML = "";
+
+  CATEGORIES.forEach(cat => {
+    const schools = SCHOOLS.filter(s => s.cat === cat.id);
+    const section = document.createElement("div");
+    section.className = "category-section";
+    section.dataset.cat = cat.id;
+
+    section.innerHTML = `
+      <div class="cat-header">
+        <div class="cat-title" style="color:${cat.color}">${cat.label}</div>
+        <div class="cat-line" style="background: linear-gradient(90deg, ${cat.color}33, transparent)"></div>
+        <div class="cat-count">${schools.length} school${schools.length !== 1 ? "s" : ""}</div>
+      </div>
+      <div class="cards-grid" id="grid-${cat.id}"></div>
+    `;
+    main.appendChild(section);
+
+    const grid = section.querySelector(".cards-grid");
+    schools.forEach(school => {
+      const card = document.createElement("div");
+      card.className = "school-card";
+      card.dataset.cat = school.cat;
+      card.dataset.name = school.name.toLowerCase();
+      card.dataset.latin = school.latin.toLowerCase();
+
+      const isForbidden = school.cat === "forbidden";
+      const isAnomaly = school.cat === "anomaly";
+
+      if (isAnomaly) {
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-sigil" style="font-size:1.3rem;color:#5a0a5a;border-color:#3a0a3a;">&#x2205;</div>
+            <div class="card-names">
+              <span class="archive-id">${school.archiveId} &nbsp;&middot;&nbsp; Clearance: <span class='redacted'></span></span>
+              <span class="anomaly-warning">&#x26A0; Beyond Classification</span>
+              <div class="card-name">${school.name}</div>
+              <div class="card-latin">${school.latin}</div>
+            </div>
+            <div class="card-toggle" style="color:#4a0a4a;">&#x25BC;</div>
+          </div>
+          <div class="card-summary">${school.summary}</div>
+          <div class="card-body">
+            <div class="card-divider" style="background:#2a0a2a;"></div>
+            <div class="card-detail">
+              <p>${school.desc}</p>
+              <div class="overuse-block" style="border-left-color:#4a0a4a;">
+                <div class="overuse-label" style="color:#6a0a6a;">Consequence of Invocation</div>
+                <div class="overuse-text">${school.overuse}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="card-sigil">${school.sigil}</div>
+          <div class="card-names">
+            ${isForbidden ? '<span class="forbidden-warning">Forbidden</span>' : ""}
+            <div class="card-name">${school.name}</div>
+            <div class="card-latin">${school.latin}</div>
+          </div>
+          <div class="card-toggle">▼</div>
+        </div>
+        <div class="card-summary">${school.summary}</div>
+        <div class="card-body">
+          <div class="card-divider"></div>
+          <div class="card-detail">
+            <p>${school.desc}</p>
+            <div class="overuse-block">
+              <div class="overuse-label">Overuse Consequence</div>
+              <div class="overuse-text">${school.overuse}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      } // end else (non-anomaly)
+
+      card.addEventListener("click", () => {
+        card.classList.toggle("expanded");
+      });
+
+      grid.appendChild(card);
+    });
+  });
+
+  updateVisibility();
+}
+
+function updateVisibility() {
+  const sections = document.querySelectorAll(".category-section");
+  let visibleCount = 0;
+
+  sections.forEach(section => {
+    const cat = section.dataset.cat;
+    const catMatch = activeFilter === "all" || activeFilter === cat;
+
+    if (!catMatch) {
+      section.classList.add("hidden");
+      return;
+    }
+
+    section.classList.remove("hidden");
+
+    const cards = section.querySelectorAll(".school-card");
+    let sectionVisible = 0;
+
+    cards.forEach(card => {
+      const nameMatch = !searchTerm ||
+        card.dataset.name.includes(searchTerm) ||
+        card.dataset.latin.includes(searchTerm);
+
+      if (nameMatch) {
+        card.style.display = "";
+        sectionVisible++;
+        visibleCount++;
+      } else {
+        card.style.display = "none";
+      }
+    });
+
+    if (sectionVisible === 0) {
+      section.classList.add("hidden");
+    }
+  });
+
+  document.getElementById("visible-count").textContent = visibleCount;
+  document.getElementById("active-filter").textContent =
+    activeFilter === "all" ? "All" :
+    CATEGORIES.find(c => c.id === activeFilter)?.label || activeFilter;
+
+  const noResults = document.getElementById("no-results");
+  noResults.classList.toggle("visible", visibleCount === 0);
+}
+
+// Filter buttons
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.cat;
+    updateVisibility();
+  });
+});
+
+// Search
+document.getElementById("search-input").addEventListener("input", e => {
+  searchTerm = e.target.value.toLowerCase().trim();
+  updateVisibility();
+});
+
+buildUI();
+document.getElementById("total-count").textContent = SCHOOLS.length;
+
+// ── Tab switching ──────────────────────────────────────────
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-page").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+  });
+});
+
+// ── Ordo Rules Data ────────────────────────────────────────
+const ORDO_RULES = [
+  {
+    num: "I",
+    stability: "neutral",
+    tag: "Structural Law",
+    title: "One Primary, One Ordo",
+    summary: "A fusion discipline is built from exactly one core school and one Ordo modifier. Only one Ordo may be active at a time.",
+    detail: "A primary school may contain only one Ordo at a time. Advanced practitioners may swap Ordos during combat or ritual work, but doing so creates severe strain on Essence structure and risks destabilizing the soul. The identity of the fusion collapses if two Ordos compete simultaneously.",
+    badge: "Foundation Rule"
+  },
+  {
+    num: "II",
+    stability: "danger",
+    tag: "Forbidden Application",
+    title: "Forbidden Schools May Function as Ordos",
+    summary: "Forbidden arts can occupy the Ordo position, but the resulting fusion will always be unstable or catastrophic.",
+    detail: "Forbidden arts can be used in the Ordo position, but the resulting fusion will always be unstable or catastrophic. These combinations produce effects that violate the natural laws of Etherial structure and can cause long-term damage to the caster or the surrounding reality. No stable fusion has ever been documented using a forbidden school as an Ordo.",
+    badge: "Catastrophic Risk"
+  },
+  {
+    num: "III",
+    stability: "forbidden",
+    tag: "Alignment Restriction",
+    title: "Etherium Alignment Governs Compatibility",
+    summary: "Light-aligned beings cannot safely use dark Ordos. Dark-aligned beings cannot safely use light Ordos. Equasonae and Mortai are exempt.",
+    detail: "Light Etherium aligned beings cannot safely employ Ordos originating from dark aligned schools, and dark aligned beings cannot safely employ light-based Ordos. The soul rejects the opposing polarity, producing spiritual burns, identity fracture, or Essence hemorrhage. Equasonae and Mortai are exempt from this restriction and may fuse any combination without alignment conflict, though stability still varies by vector.",
+    badge: "Alignment Lock"
+  },
+  {
+    num: "IV",
+    stability: "warning",
+    tag: "Compatibility Mechanic",
+    title: "Essence Vectors Determine Fusion Stability",
+    summary: "Each school carries Essence vectors. Compatible vectors produce stable fusions. Opposing vectors produce unstable ones. Contradicting vectors produce catastrophic results.",
+    detail: "Each school carries one or more Essence vectors — thermal, kinetic, spiritual, mental, astral, structural, biological, or entropic. When vectors are compatible, the fusion is stable. When vectors oppose each other, the fusion becomes unstable. When vectors contradict fundamental laws, the fusion becomes catastrophic. A caster who ignores vector compatibility will not simply fail — they will be used as the failure point.",
+    badge: "Stability Mechanic"
+  },
+  {
+    num: "V",
+    stability: "neutral",
+    tag: "Identity Rule",
+    title: "The Ordo Modifies — It Does Not Replace",
+    summary: "The primary school remains dominant. The Ordo overlays a secondary pattern that alters, redirects, or refracts — but the foundation belongs to the primary.",
+    detail: "The primary school provides the structural foundation of the casting discipline. The Ordo school overlays a secondary pattern that alters how the primary behaves, introducing new traits, altered manifestations, or entirely new categories of effect. The identity of the primary school remains dominant regardless of modification intensity. A Pyrae with an Umbrae Ordo is still, fundamentally, a fire user — but one whose flames have learned to swallow light.",
+    badge: "Dominance Principle"
+  },
+  {
+    num: "VI",
+    stability: "stable",
+    tag: "Power Ceiling",
+    title: "Fusions Cannot Exceed the Primary School's Domain",
+    summary: "No Ordo augmentation can manifest abilities that fundamentally violate the primary discipline's type of manipulation.",
+    detail: "Even with high-level Ordo augmentation, a fusion cannot manifest abilities that fundamentally violate the type of manipulation performed by the primary discipline. The Ordo expands, redirects, or refracts the primary — but does not redefine its domain. A Terrae caster with a Temporae Ordo may create stone that ages rapidly or traps time within mineral, but they cannot rewind history. The earth is still the anchor.",
+    badge: "Domain Ceiling"
+  },
+  {
+    num: "VII",
+    stability: "warning",
+    tag: "Caster Requirement",
+    title: "The Soul Must Support Dual Pattern Resonance",
+    summary: "Successful fusion requires the caster's Essence to hold two simultaneous pattern signatures without collapse.",
+    detail: "Successful fusion requires the caster's Essence to support two simultaneous pattern signatures without collapse. Casters with fractured or damaged spiritual structures risk dissociation, Essence bleeding, or pattern implosion when attempting Ordo fusions. Soul integrity is not a suggestion — it is the vessel. A cracked vessel filled with two forces does not hold both. It shatters.",
+    badge: "Soul Prerequisite"
+  },
+  {
+    num: "VIII",
+    stability: "stable",
+    tag: "Emergent Properties",
+    title: "A Fusion Creates a Third, Distinct Discipline",
+    summary: "Once an Ordo is applied, the result is treated as a new discipline with its own properties, limits, risks, and casting protocols.",
+    detail: "Once an Ordo is applied to a primary school, the result is treated as a third discipline with its own properties, limitations, risks, and casting protocols. Fusion disciplines often contain emergent properties that do not exist in either source school individually. These emergent traits cannot be predicted entirely from theory — they must be discovered through practice, at the caster's own risk.",
+    badge: "Emergence Law"
+  },
+  {
+    num: "IX",
+    stability: "danger",
+    tag: "Structural Dependency",
+    title: "An Ordo Cannot Be Cast Alone",
+    summary: "An Ordo pattern has no structural integrity without a primary school. Attempting solo Ordo casting causes immediate collapse.",
+    detail: "An Ordo pattern has no structural integrity by itself and cannot generate effects without a primary foundation. Attempting to cast an Ordo without a primary school results in Essence stutter, casting backlash, or immediate collapse of the user's casting focus. The Ordo is an overlay — it has no floor of its own. Without the primary school beneath it, it falls, and it takes the caster's Essence cohesion with it.",
+    badge: "Dependency Rule"
+  },
+  {
+    num: "X",
+    stability: "warning",
+    tag: "Long-Term Risk",
+    title: "Repeated Ordo Switching Degrades the Soul",
+    summary: "Frequent transitions between different Ordos stress the soul's lattice and risk long-term instability, fragmentation, and vulnerability to possession.",
+    detail: "Frequent transitions between different Ordos place stress on the lattice of the soul and risk long-term instability. Symptoms include fragmentation of identity, weakened pattern cohesion, and increased susceptibility to corruption or possession. Every switch asks the soul to reorganize itself. It will do so, reliably, for a time. Then it will stop reorganizing cleanly. Then it will stop entirely.",
+    badge: "Degradation Warning"
+  }
+];
+
+const VECTORS = [
+  { name: "Thermal", color: "#c0452a", schools: "Pyrae, Magmae, Ignarae, Vaporae, Thermiaae, Chillae, Cryae, Nivae" },
+  { name: "Kinetic", color: "#3a6a9a", schools: "Dynamae, Impulsae, Pressae, Aerae, Tremorae, Voltae" },
+  { name: "Spiritual", color: "#c9a84c", schools: "Luminae, Infernae, Animae, Mortae, Vitae, Equae, Exaltae" },
+  { name: "Mental", color: "#7a3a7a", schools: "Mnemonae, Emotae, Somniae, Phobae, Volitae, Maniaae, Ferinae" },
+  { name: "Astral", color: "#5a3a9a", schools: "Gravitae, Spatiale, Temporae, Astrae, Singulae, Luxae, Umbrae, Vorae" },
+  { name: "Structural", color: "#8a6a2a", schools: "Terrae, Crystae, Ferrae, Ossea, Ordinae, Creatae, Ruptae, Rectae" },
+  { name: "Biological", color: "#2a7a3a", schools: "Sangae, Carnae, Regenae, Mutatae, Venomae, Pestiae, Bestiae, Florae" },
+  { name: "Entropic", color: "#6a2a2a", schools: "Entropae, Ruinae, Maledae, Caustae, Toxae, Radiae, Divorae, Hemorae" },
+];
+
+function buildOrdoPage() {
+  // Rules
+  const rulesList = document.getElementById("rules-list");
+  ORDO_RULES.forEach(rule => {
+    const card = document.createElement("div");
+    card.className = "rule-card";
+    card.dataset.stability = rule.stability;
+    card.innerHTML = `
+      <div class="rule-num">${rule.num}</div>
+      <div class="rule-content">
+        <div class="rule-header">
+          <div class="rule-title-wrap">
+            <div class="rule-tag">${rule.tag}</div>
+            <div class="rule-title">${rule.title}</div>
+          </div>
+          <div class="rule-toggle">&#x25BC;</div>
+        </div>
+        <div class="rule-body">
+          <div class="rule-divider"></div>
+          <div class="rule-detail">
+            <div class="rule-text">${rule.detail}</div>
+            <div class="rule-badge">${rule.badge}</div>
+          </div>
+        </div>
+      </div>
+    `;
+    card.addEventListener("click", () => card.classList.toggle("expanded"));
+    rulesList.appendChild(card);
+  });
+
+  // Vectors
+  const vectorGrid = document.getElementById("vector-grid");
+  VECTORS.forEach(v => {
+    const card = document.createElement("div");
+    card.className = "vector-card";
+    card.style.borderTopColor = v.color;
+    card.style.borderTopWidth = "2px";
+    card.innerHTML = `
+      <div class="vector-name" style="color:${v.color}">${v.name}</div>
+      <div class="vector-schools">${v.schools}</div>
+    `;
+    vectorGrid.appendChild(card);
+  });
+}
+
+buildOrdoPage();
+
+// ── Hierarchy Data ─────────────────────────────────────────
+const HIERARCHY = [
+  {
+    id: "light",
+    name: "Light Etherium",
+    sigil: "☀",
+    desc: "The order of creation, structure, and radiant Essence. Lords of existence and the architects of cosmic law.",
+    tiers: [
+      { rank: "Tier I", name: "Luminae", aka: null,
+        desc: "The highest ranking beings within the Light Etherium and the lords of creation. They embody pure ordered Essence and govern the structure of existence. Their presence stabilizes reality and anchors the laws of light-based creation." },
+      { rank: "Tier II", name: "Demiluminae", aka: null,
+        desc: "The first hybrid generation created through the union of angels and mortals. They possess immense radiance and serve as the earliest link between humanity and celestial power. Their Essence forms the foundation for all later Lightspawn." },
+      { rank: "Tier III", name: "Flouresonae", aka: "Lightspawns",
+        desc: "Descendants of the Demiluminae carrying diluted but formidable celestial Essence. They bridge the mortal and celestial realms and often serve as guardians, emissaries, or vessels of light-aligned magic." },
+      { rank: "Tier IV", name: "Subluminae", aka: "Phines",
+        desc: "The primary workforce of the Light Etherium. Highly disciplined beings who carry out tasks for the Luminae and maintain the day-to-day structure of angelic operations." },
+      { rank: "Tier V", name: "Archaphine", aka: null,
+        desc: "A specialized elevated tier of Subluminae. These entities report directly to Angels and function as high-level attendants, strategists, and administrators. They maintain the interface between celestial bureaucracy and divine authority." },
+      { rank: "Tier VI", name: "Massangai", aka: null,
+        desc: "The messenger class of the Light Etherium and the most numerous. They communicate between angels, mortals, and other Etherial orders, carrying Essence-based information across realms." },
+    ]
+  },
+  {
+    id: "dark",
+    name: "Dark Etherium",
+    sigil: "🌑",
+    desc: "The order of destruction, entropy, and corrosive Essence. Lords of dissolution and the architects of suffering.",
+    tiers: [
+      { rank: "Tier I", name: "Infernae", aka: null,
+        desc: "The highest ranking beings of the Dark Etherium and the lords of destruction and pain. They embody the raw, destructive side of Essence and champion chaos, dissolution, and suffering as cosmic counterbalance to the Luminae." },
+      { rank: "Tier II", name: "Demiiinfernae", aka: null,
+        desc: "The first hybrids born from Infernae and mortals. They represent the earliest merging of mortal form and destructive Essence. The Demiiinfernae establish the lineage that later becomes the Darkspawn." },
+      { rank: "Tier III", name: "Nullsonae", aka: "Darkspawns",
+        desc: "Descendants of the Demiiinfernae carrying corrupted or destructive Essence. Their power manifests through annihilation, fear, and decay. They often serve as agents of destruction in the mortal plane." },
+      { rank: "Tier IV", name: "Subinfernae", aka: null,
+        desc: "The common demons of the Dark Etherium — the workforce equivalent of Subluminae but aligned to destruction rather than order. They execute tasks for the Infernae and form the bulk of demonic armies." },
+      { rank: "Tier V", name: "Archdemae", aka: null,
+        desc: "An elevated class of Subinfernae who report directly to the Devils. They hold authority over demon legions, complex operations, and Essence warfare." },
+      { rank: "Tier VI", name: "Crawlai", aka: "Crawlers",
+        desc: "The lowest classification of the Dark Etherium. Driven by pure destructive instinct, they constantly seek entry into mortal realms to destroy whatever they encounter. They represent the raw, unrefined hunger of dark Essence." },
+    ]
+  },
+  {
+    id: "neutral",
+    name: "Neutral Order",
+    sigil: "⚖",
+    desc: "The order between light and dark. They do not serve creation or destruction — they serve balance itself.",
+    tiers: [
+      { rank: "Singular", name: "Ultimai", aka: null,
+        desc: "A singular entity within the Equasonae. Summoned only when the universe has tilted too far toward light or darkness. This being exists to enact and restore true cosmic equilibrium. Ultimai Nexalis and Ultimai Redgrave are the known examples." },
+      { rank: "Tier I", name: "Equasonae", aka: "Equilibriai",
+        desc: "All beings whose Essence exists in perfect or near-perfect balance between light and dark. They do not align with either Etherium and instead occupy the neutral axis." },
+      { rank: "Tier II", name: "Absolai", aka: null,
+        desc: "Extremely rare ascended beings who directly serve the Ultimai. An Absolai forms when a Mortai successfully transcends their prior state. They exhibit balanced Essence refined to near-divine purity." },
+      { rank: "Tier III", name: "Mortai", aka: null,
+        desc: "Individuals chosen to embody balance in times when the cosmic scale shifts dangerously. Created when a mortal or Etherial being is transformed into a corrective agent. They balance disruptions by force, influence, or Essence stabilization." },
+      { rank: "Tier IV", name: "Bludai", aka: null,
+        desc: "The most common classification within the neutral spectrum, encompassing all mortals and beings not aligned with Light Etherium, Dark Etherium, or higher neutral roles. Bludai hold no innate Etherial authority but possess potential for transformation." },
+    ]
+  }
+];
+
+function buildHierarchyPage() {
+  const container = document.getElementById("hier-orders");
+
+  HIERARCHY.forEach(order => {
+    const col = document.createElement("div");
+    col.className = `order-column order-${order.id}`;
+
+    // Header
+    col.innerHTML = `
+      <div class="order-header">
+        <span class="order-sigil">${order.sigil}</span>
+        <div class="order-name">${order.name}</div>
+        <div class="order-desc">${order.desc}</div>
+      </div>
+    `;
+
+    // Tiers
+    order.tiers.forEach((tier, i) => {
+      // Connector line between tiers
+      if (i > 0) {
+        const conn = document.createElement("div");
+        conn.className = "tier-connector";
+        col.appendChild(conn);
+      }
+
+      const card = document.createElement("div");
+      card.className = "tier-card";
+      card.innerHTML = `
+        <div class="tier-header">
+          <div class="tier-rank">${tier.rank}</div>
+          <div class="tier-names">
+            <div class="tier-name">${tier.name}</div>
+            ${tier.aka ? `<div class="tier-aka">Also: ${tier.aka}</div>` : ""}
+          </div>
+          <div class="tier-toggle">&#x25BC;</div>
+        </div>
+        <div class="tier-body">
+          <div class="tier-divider"></div>
+          <div class="tier-detail">${tier.desc}</div>
+        </div>
+      `;
+      card.addEventListener("click", () => card.classList.toggle("expanded"));
+      col.appendChild(card);
+    });
+
+    container.appendChild(col);
+  });
+}
+
+buildHierarchyPage();
+</script>
+</body>
+</html>
