@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Essekenesis — Schools of Power</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #080808;
@@ -31,9 +31,9 @@
     --cat-balance: #4a8a8a;
     --cat-forbidden: #1a1a1a;
     --cat-forbidden-text: #8b0000;
-    --cat-anomaly: #000000;
-    --cat-anomaly-text: #3a0a3a;
-    --cat-anomaly-glow: #6a0a6a;
+    --cat-anomaly: #0a0010;
+    --cat-anomaly-text: #c030d8;
+    --cat-anomaly-glow: #d050f0;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -397,8 +397,8 @@
 
   /* ANOMALY — Primorivorae */
   .school-card[data-cat="anomaly"] {
-    background: #030003;
-    border-color: #2a0a2a;
+    background: #04000a;
+    border-color: #3a1050;
     position: relative;
     overflow: hidden;
   }
@@ -420,37 +420,37 @@
   .school-card[data-cat="anomaly"]::before { background: var(--cat-anomaly-glow); }
 
   .school-card[data-cat="anomaly"] .card-name {
-    color: #9a3a9a;
+    color: #d060f0;
     letter-spacing: 0.15em;
   }
 
   .school-card[data-cat="anomaly"] .card-sigil {
-    border-color: #3a0a3a;
-    color: #6a0a6a;
+    border-color: #6a1a7a;
+    color: #c040e0;
     background: #000;
     font-size: 0.9rem;
   }
 
-  .school-card[data-cat="anomaly"] .card-summary { color: #5a3a5a; font-style: italic; }
-  .school-card[data-cat="anomaly"] .card-latin { color: #4a1a4a; }
+  .school-card[data-cat="anomaly"] .card-summary { color: #8a4a9a; font-style: italic; }
+  .school-card[data-cat="anomaly"] .card-latin { color: #8030a0; }
 
   .school-card[data-cat="anomaly"] .overuse-block {
-    border-left-color: #4a0a4a;
+    border-left-color: #9030b0;
     background: #000;
   }
 
-  .school-card[data-cat="anomaly"] .overuse-label { color: #6a1a6a; }
-  .school-card[data-cat="anomaly"] .overuse-text { color: #5a3a5a; }
+  .school-card[data-cat="anomaly"] .overuse-label { color: #c040e0; }
+  .school-card[data-cat="anomaly"] .overuse-text { color: #8a4a9a; }
 
-  .school-card[data-cat="anomaly"] .card-detail p { color: #7a5a7a; }
+  .school-card[data-cat="anomaly"] .card-detail p { color: #9a6aaa; }
 
   .anomaly-warning {
     display: inline-block;
     font-family: 'Cinzel', serif;
     font-size: 0.5rem;
     letter-spacing: 0.3em;
-    color: #6a0a6a;
-    border: 1px solid #3a0a3a;
+    color: #c040e0;
+    border: 1px solid #7a1a9a;
     padding: 2px 8px;
     margin-bottom: 6px;
     text-transform: uppercase;
@@ -514,23 +514,24 @@
   /* Tab Navigation */
   .tab-nav {
     display: flex;
+    justify-content: center;
     border-bottom: 2px solid var(--border);
     background: rgba(8,8,8,0.98);
     position: sticky;
     top: 0;
     z-index: 300;
     backdrop-filter: blur(10px);
-    padding: 0 40px;
-    gap: 4px;
+    padding: 0;
+    gap: 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
   .tab-nav::-webkit-scrollbar { display: none; }
   .tab-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     padding: 16px 22px;
     background: transparent;
@@ -1879,7 +1880,7 @@
     <div class="guide-nav-card" onclick="switchTab('quiz')">
       <div class="guide-nav-icon">◈</div>
       <div class="guide-nav-label">Soul Classification</div>
-      <div class="guide-nav-sub">Discover your primary school and Ordo through 12 questions</div>
+      <div class="guide-nav-sub">Discover your primary school and Ordo through 18 questions</div>
     </div>
     <div class="guide-nav-card" onclick="switchTab('alignment')">
       <div class="guide-nav-icon">⚖</div>
@@ -1924,7 +1925,7 @@
   <button class="filter-btn" data-cat="occult">Occult &amp; Fate</button>
   <button class="filter-btn" data-cat="balance">Balance</button>
   <button class="filter-btn" data-cat="forbidden">⚠ Forbidden</button>
-  <button class="filter-btn" data-cat="anomaly" style="border-color:#3a0a3a;color:#4a0a4a;">∅ Anomaly</button>
+  <button class="filter-btn" data-cat="anomaly" style="border-color:#7a20a0;color:#b030d0;">∅ Anomaly</button>
   <div class="search-wrap">
     <input class="search-input" type="text" placeholder="Search schools…" id="search-input">
   </div>
@@ -1989,7 +1990,7 @@
       <div class="quiz-intro-content">
         <span class="quiz-eyebrow">Soul Classification Protocol</span>
         <h2 class="quiz-main-title">What is your Essence?</h2>
-        <p class="quiz-intro-text">Twelve questions. No correct answers. The pattern of your soul will determine your primary school of Essekenesis and suggest an Ordo — the secondary discipline most compatible with your nature.</p>
+        <p class="quiz-intro-text">Eighteen questions. No correct answers. The pattern of your soul will determine your primary school of Essekenesis and suggest an Ordo — the secondary discipline most compatible with your nature.</p>
         <p class="quiz-intro-sub">Answer honestly. The Essence does not reward what you wish you were.</p>
         <button class="quiz-start-btn" id="quiz-start-btn">Begin Classification</button>
       </div>
@@ -2904,6 +2905,24 @@ const HIERARCHY = [
     ]
   },
   {
+    id: "neutral",
+    name: "Neutral Order",
+    sigil: "⚖",
+    desc: "The order between light and dark. They do not serve creation or destruction — they serve balance itself.",
+    tiers: [
+      { rank: "Singular", name: "Ultimai", aka: null,
+        desc: "A singular entity within the Equasonae. Summoned only when the universe has tilted too far toward light or darkness. This being exists to enact and restore true cosmic equilibrium. Ultimai Nexalis and Ultimai Redgrave are the known examples." },
+      { rank: "Tier I", name: "Equasonae", aka: "Equilibriai",
+        desc: "All beings whose Essence exists in perfect or near-perfect balance between light and dark. They do not align with either Etherium and instead occupy the neutral axis." },
+      { rank: "Tier II", name: "Absolai", aka: null,
+        desc: "Extremely rare ascended beings who directly serve the Ultimai. An Absolai forms when a Mortai successfully transcends their prior state. They exhibit balanced Essence refined to near-divine purity." },
+      { rank: "Tier III", name: "Mortai", aka: null,
+        desc: "Individuals chosen to embody balance in times when the cosmic scale shifts dangerously. Created when a mortal or Etherial being is transformed into a corrective agent. They balance disruptions by force, influence, or Essence stabilization." },
+      { rank: "Tier IV", name: "Bludai", aka: null,
+        desc: "The most common classification within the neutral spectrum, encompassing all mortals and beings not aligned with Light Etherium, Dark Etherium, or higher neutral roles. Bludai hold no innate Etherial authority but possess potential for transformation." },
+    ]
+  },
+  {
     id: "dark",
     name: "Dark Etherium",
     sigil: "🌑",
@@ -2922,26 +2941,9 @@ const HIERARCHY = [
       { rank: "Tier VI", name: "Crawlai", aka: "Crawlers",
         desc: "The lowest classification of the Dark Etherium. Driven by pure destructive instinct, they constantly seek entry into mortal realms to destroy whatever they encounter. They represent the raw, unrefined hunger of dark Essence." },
     ]
-  },
-  {
-    id: "neutral",
-    name: "Neutral Order",
-    sigil: "⚖",
-    desc: "The order between light and dark. They do not serve creation or destruction — they serve balance itself.",
-    tiers: [
-      { rank: "Singular", name: "Ultimai", aka: null,
-        desc: "A singular entity within the Equasonae. Summoned only when the universe has tilted too far toward light or darkness. This being exists to enact and restore true cosmic equilibrium. Ultimai Nexalis and Ultimai Redgrave are the known examples." },
-      { rank: "Tier I", name: "Equasonae", aka: "Equilibriai",
-        desc: "All beings whose Essence exists in perfect or near-perfect balance between light and dark. They do not align with either Etherium and instead occupy the neutral axis." },
-      { rank: "Tier II", name: "Absolai", aka: null,
-        desc: "Extremely rare ascended beings who directly serve the Ultimai. An Absolai forms when a Mortai successfully transcends their prior state. They exhibit balanced Essence refined to near-divine purity." },
-      { rank: "Tier III", name: "Mortai", aka: null,
-        desc: "Individuals chosen to embody balance in times when the cosmic scale shifts dangerously. Created when a mortal or Etherial being is transformed into a corrective agent. They balance disruptions by force, influence, or Essence stabilization." },
-      { rank: "Tier IV", name: "Bludai", aka: null,
-        desc: "The most common classification within the neutral spectrum, encompassing all mortals and beings not aligned with Light Etherium, Dark Etherium, or higher neutral roles. Bludai hold no innate Etherial authority but possess potential for transformation." },
-    ]
   }
 ];
+
 
 function buildHierarchyPage() {
   const container = document.getElementById("hier-orders");
@@ -3506,7 +3508,7 @@ const LORE_DATA = [
       {
         name: "The Power Equilibrium",
         sub: "Post-Lerix Cosmic Correction",
-        body: "After Lerix was sealed, the universe risked collapse due to an unequal count of angels and demons. To correct this, the angels collectively sacrificed a portion of their power — equal to the amount Lerix had used to create Zorath. This power was poured into Elyndris. No single angel could have done this alone without dying. As a result, angels are individually weaker than demons, but collectively possess exactly enough power to maintain cosmic balance."
+        body: "After Lerix was sealed, the universe risked collapse due to an unequal count of angels and demons. To correct this, the angels collectively sacrificed a portion of their power — equal to the amount Lerix had used to create Zorath. This power was poured into Erelias. No single angel could have done this alone without dying. As a result, angels are individually weaker than demons, but collectively possess exactly enough power to maintain cosmic balance."
       }
     ]
   },
@@ -3523,7 +3525,7 @@ const LORE_DATA = [
       {
         name: "Solvaris",
         sub: "Angel of Valor — Celestial warrior and defender of justice",
-        body: "Solvaris dwells in the Eternal Bastion of Light, leading divine armies. She defeated Drasvok in single combat during the War of the Spire, and held a celestial gate against an entire demonic horde for seven days. She trained countless mortal heroes, leaving a legacy of valor that persists through generations. She wields the Blazing Aegis — a divine shield that repels infernal energy."
+        body: "Solvaris dwells in the Eternal Bastion of Light, leading divine armies. He defeated Drasvok in single combat during the War of the Spire, and held a celestial gate against an entire demonic horde for seven days. He trained countless mortal heroes, leaving a legacy of valor that persists through generations. He wields the Blazing Aegis — a divine shield that repels infernal energy."
       },
       {
         name: "Elyndris",
