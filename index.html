@@ -2728,10 +2728,9 @@ function updateToggleLabel() {
 
 // ── Tab switching ──────────────────────────────────────────
 function switchTab(tabId) {
-}
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".tab-page").forEach(p => p.classList.remove("active"));
-  const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+  const btn = document.querySelector(`[data-tab="${tabId}"]`);
   if (btn) btn.classList.add("active");
   const page = document.getElementById("tab-" + tabId);
   if (page) page.classList.add("active");
