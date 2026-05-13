@@ -515,6 +515,7 @@
   .tab-nav {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     border-bottom: 2px solid var(--border);
     background: rgba(8,8,8,0.98);
     position: sticky;
@@ -523,15 +524,18 @@
     backdrop-filter: blur(10px);
     padding: 0;
     gap: 0;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    overflow-x: visible;
   }
   @media (max-width: 860px) {
     .tab-nav {
+      flex-wrap: nowrap;
       justify-content: flex-start;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
       padding: 0 4px;
     }
+    .tab-nav::-webkit-scrollbar { display: none; }
   }
   .tab-nav::-webkit-scrollbar { display: none; }
   .tab-btn {
