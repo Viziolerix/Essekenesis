@@ -2756,6 +2756,15 @@ function updateToggleLabel() {
 
 // ── Tab switching ──────────────────────────────────────────
 function switchTab(tabId) {
+  // Stop any TTS when switching tabs
+  if (window.speechSynthesis && window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    if (currentTTSBtn) {
+      currentTTSBtn.classList.remove('speaking');
+      currentTTSBtn.innerHTML = currentTTSBtn.innerHTML.replace('Stop', 'Read Aloud');
+      currentTTSBtn = null;
+    }
+  }
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".tab-page").forEach(p => p.classList.remove("active"));
   const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
@@ -3762,19 +3771,7 @@ function speakSchool(btn, name, desc, overuse) {
   window.speechSynthesis.speak(utter);
 }
 
-// Stop speech when switching tabs
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-      if (currentTTSBtn) {
-        currentTTSBtn.classList.remove('speaking');
-        currentTTSBtn.innerHTML = currentTTSBtn.innerHTML.replace('Stop', 'Read Aloud');
-        currentTTSBtn = null;
-      }
-    }
-  });
-});
+// TTS stops via switchTab function
 
 
 // ── Alignment Quiz ─────────────────────────────────────────
