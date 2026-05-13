@@ -1838,32 +1838,6 @@
     margin-top: 60px;
   }
 
-  /* TTS Button */
-  .tts-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.55rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    background: transparent;
-    border: 1px solid var(--border);
-    padding: 6px 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 14px;
-    flex-shrink: 0;
-  }
-  .tts-btn:hover { color: var(--glow-gold); border-color: var(--glow-gold); }
-  .tts-btn.speaking { color: var(--glow-gold); border-color: var(--glow-gold); background: rgba(201,168,76,0.06); }
-  .tts-btn svg { flex-shrink: 0; }
-  .tts-btn.speaking svg { animation: pulse-icon 1.2s ease-in-out infinite; }
-  @keyframes pulse-icon {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
 
 </style>
 </head>
@@ -2626,7 +2600,7 @@ function buildUI() {
             </div>
           </div>
         `;
-      } else {
+} else {
 
       card.innerHTML = `
         <div class="card-header">
@@ -2643,22 +2617,16 @@ function buildUI() {
         <div class="card-body">
           <div class="card-divider"></div>
           <div class="card-detail">
-            ${school.alignNote ? `<div class="align-note-block">&#x2139; ${school.alignNote}</div>` : ""}
+            ${school.alignNote ? '<div class="align-note-block">&#x2139; ' + school.alignNote + '</div>' : ""}
             <p>${school.desc}</p>
             <div class="overuse-block">
               <div class="overuse-label">Overuse Consequence</div>
               <div class="overuse-text">${school.overuse}</div>
             </div>
-            <button class="tts-btn"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>Read Aloud</button>
-          </div>
+</div>
         </div>
-      \`;
-      card.querySelector('.tts-btn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        ttsSpeak(card.querySelector('.tts-btn'), school.name + '. ' + school.summary + '. ' + school.desc + '. Overuse consequence: ' + school.overuse);
-      });
-
-      } // end else (non-anomaly)
+      `;
+} // end else (non-anomaly)
 
       card.addEventListener("click", () => {
         card.classList.toggle("expanded");
@@ -2760,15 +2728,7 @@ function updateToggleLabel() {
 
 // ── Tab switching ──────────────────────────────────────────
 function switchTab(tabId) {
-  // Stop any TTS when switching tabs
-  if (window.speechSynthesis && window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-    if (_ttsBtn) {
-      _ttsBtn.classList.remove('speaking');
-      _ttsBtn.innerHTML = _ttsBtn.innerHTML.replace('Stop', 'Read Aloud');
-      _ttsBtn = null;
-    }
-  }
+}
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".tab-page").forEach(p => p.classList.remove("active"));
   const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
@@ -2914,15 +2874,6 @@ function buildOrdoPage() {
       </div>
     `;
     card.addEventListener("click", () => card.classList.toggle("expanded"));
-    const ordoBtn = document.createElement('button');
-    ordoBtn.className = 'tts-btn';
-    ordoBtn.style.margin = '0 20px 16px';
-    ordoBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>Read Aloud';
-    ordoBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      ttsSpeak(ordoBtn, 'Rule ' + rule.num + '. ' + rule.title + '. ' + rule.detail);
-    });
-    card.querySelector('.rule-detail').appendChild(ordoBtn);
     rulesList.appendChild(card);
   });
 
@@ -2939,49 +2890,6 @@ function buildOrdoPage() {
     `;
     vectorGrid.appendChild(card);
   });
-}
-
-// ── Text-to-Speech ─────────────────────────────────────────
-let _ttsBtn = null;
-
-function ttsSpeak(btn, text) {
-  const synth = window.speechSynthesis;
-  if (!synth) return;
-
-  // Toggle off if same button
-  if (_ttsBtn === btn && synth.speaking) {
-    synth.cancel();
-    btn.classList.remove('speaking');
-    btn.innerHTML = btn.innerHTML.replace('Stop', 'Read Aloud');
-    _ttsBtn = null;
-    return;
-  }
-
-  // Stop previous
-  synth.cancel();
-  if (_ttsBtn) {
-    _ttsBtn.classList.remove('speaking');
-    _ttsBtn.innerHTML = _ttsBtn.innerHTML.replace('Stop', 'Read Aloud');
-    _ttsBtn = null;
-  }
-
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.rate = 0.92;
-  utter.pitch = 1.0;
-  utter.volume = 1.0;
-
-  const reset = () => {
-    btn.classList.remove('speaking');
-    btn.innerHTML = btn.innerHTML.replace('Stop', 'Read Aloud');
-    if (_ttsBtn === btn) _ttsBtn = null;
-  };
-  utter.onend = reset;
-  utter.onerror = reset;
-
-  btn.classList.add('speaking');
-  btn.innerHTML = btn.innerHTML.replace('Read Aloud', 'Stop');
-  _ttsBtn = btn;
-  synth.speak(utter);
 }
 
 buildOrdoPage();
@@ -3091,16 +2999,6 @@ function buildHierarchyPage() {
         </div>
       `;
       card.addEventListener("click", () => card.classList.toggle("expanded"));
-      // TTS for hierarchy
-      const hierBtn = document.createElement('button');
-      hierBtn.className = 'tts-btn';
-      hierBtn.style.marginTop = '10px';
-      hierBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>Read Aloud';
-      hierBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        ttsSpeak(hierBtn, tier.name + '. ' + (tier.aka ? 'Also known as ' + tier.aka + '. ' : '') + tier.desc);
-      });
-      card.querySelector('.tier-detail').appendChild(hierBtn);
       col.appendChild(card);
     });
 
@@ -3785,19 +3683,6 @@ function buildLorePage() {
         if (nm) nm.style.color = open ? col : "";
         if (tg) tg.style.color = open ? col : "";
       });
-      // TTS button for lore
-      const loreDetail = card.querySelector('.lore-field-text');
-      if (loreDetail) {
-        const loreBtn = document.createElement('button');
-        loreBtn.className = 'tts-btn';
-        loreBtn.style.marginTop = '12px';
-        loreBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>Read Aloud';
-        loreBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          ttsSpeak(loreBtn, entry.name + '. ' + entry.sub + '. ' + entry.body);
-        });
-        loreDetail.parentElement.appendChild(loreBtn);
-      }
       sec.appendChild(card);
     });
     container.appendChild(sec);
