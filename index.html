@@ -527,6 +527,12 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
+  @media (max-width: 860px) {
+    .tab-nav {
+      justify-content: flex-start;
+      padding: 0 4px;
+    }
+  }
   .tab-nav::-webkit-scrollbar { display: none; }
   .tab-btn {
     font-family: 'Cormorant Garamond', serif;
@@ -1827,6 +1833,33 @@
     border-top: 1px solid #1a1a1a;
     margin-top: 60px;
   }
+
+  /* TTS Button */
+  .tts-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 14px;
+  }
+  .tts-btn:hover { color: var(--glow-gold); border-color: var(--glow-gold); }
+  .tts-btn.speaking { color: var(--glow-gold); border-color: var(--glow-gold); background: rgba(201,168,76,0.06); }
+  .tts-btn svg { flex-shrink: 0; transition: all 0.2s; }
+  .tts-btn.speaking svg { animation: pulse-icon 1.2s ease-in-out infinite; }
+  @keyframes pulse-icon {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
 </style>
 </head>
 <body>
@@ -2611,6 +2644,12 @@ function buildUI() {
               <div class="overuse-label">Overuse Consequence</div>
               <div class="overuse-text">${school.overuse}</div>
             </div>
+            <button class="tts-btn" onclick="event.stopPropagation();speakSchool(this,'${school.name.replace(/'/g,"\\'")}','${school.desc.replace(/'/g,"\\'").replace(/
+/g,' ')}','${school.overuse.replace(/'/g,"\\'").replace(/
+/g,' ')}')">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+              Read Aloud
+            </button>
           </div>
         </div>
       `;
@@ -3678,6 +3717,65 @@ function buildLorePage() {
 }
 
 buildLorePage();
+
+// ── Text-to-Speech ─────────────────────────────────────────
+let currentUtterance = null;
+let currentTTSBtn = null;
+
+function speakSchool(btn, name, desc, overuse) {
+  // If already speaking this card, stop
+  if (currentTTSBtn === btn && window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    btn.classList.remove('speaking');
+    btn.innerHTML = btn.innerHTML.replace('Stop', 'Read Aloud');
+    currentTTSBtn = null;
+    return;
+  }
+  // Stop any current speech
+  window.speechSynthesis.cancel();
+  if (currentTTSBtn) {
+    currentTTSBtn.classList.remove('speaking');
+    currentTTSBtn.innerHTML = currentTTSBtn.innerHTML.replace('Stop', 'Read Aloud');
+  }
+
+  const text = `${name}. ${desc}. Overuse consequence: ${overuse}`;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.92;
+  utter.pitch = 1.0;
+  utter.volume = 1.0;
+
+  utter.onend = () => {
+    btn.classList.remove('speaking');
+    btn.innerHTML = btn.innerHTML.replace('Stop', 'Read Aloud');
+    currentTTSBtn = null;
+  };
+  utter.onerror = () => {
+    btn.classList.remove('speaking');
+    btn.innerHTML = btn.innerHTML.replace('Stop', 'Read Aloud');
+    currentTTSBtn = null;
+  };
+
+  btn.classList.add('speaking');
+  btn.innerHTML = btn.innerHTML.replace('Read Aloud', 'Stop');
+  currentTTSBtn = btn;
+  currentUtterance = utter;
+  window.speechSynthesis.speak(utter);
+}
+
+// Stop speech when switching tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      if (currentTTSBtn) {
+        currentTTSBtn.classList.remove('speaking');
+        currentTTSBtn.innerHTML = currentTTSBtn.innerHTML.replace('Stop', 'Read Aloud');
+        currentTTSBtn = null;
+      }
+    }
+  });
+});
+
 
 // ── Alignment Quiz ─────────────────────────────────────────
 
